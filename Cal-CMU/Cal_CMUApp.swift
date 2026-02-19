@@ -1,0 +1,13 @@
+import SwiftUI
+
+@main
+struct Cal_CMUApp: App {
+    @State private var mealStore = MealStore()
+
+    var body: some Scene {
+        WindowGroup {
+            HomeView()
+                .environment(mealStore)
+        }
+    }
+}
