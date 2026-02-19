@@ -2,10 +2,11 @@ import SwiftUI
 
 struct CameraView: View {
     let mealType: MealType
-    let onMealCaptured: (UIImage) -> Void
+    let onMealCaptured: (UIImage, ScanSource) -> Void
     @Environment(\.dismiss) private var dismiss
     @State private var showImagePicker = false
     @State private var pickerSource: UIImagePickerController.SourceType = .camera
+    @State private var activeScanSource: ScanSource = .receipt
 
     var body: some View {
         NavigationStack {
@@ -16,7 +17,7 @@ struct CameraView: View {
                 VStack(spacing: 0) {
                     Spacer()
 
-                    // Camera preview area
+                    // Hero area
                     ZStack {
                         RoundedRectangle(cornerRadius: 28)
                             .fill(Color(.systemGray6))
@@ -32,26 +33,27 @@ struct CameraView: View {
                                     )
                             )
 
-                        VStack(spacing: 20) {
+                        VStack(spacing: 18) {
                             ZStack {
                                 Circle()
-                                    .fill(mealType.color.opacity(0.1))
+                                    .fill(Color.blue.opacity(0.1))
                                     .frame(width: 80, height: 80)
 
-                                Image(systemName: "camera.viewfinder")
+                                Image(systemName: "doc.text.viewfinder")
                                     .font(.system(size: 36, weight: .light))
-                                    .foregroundStyle(mealType.color.opacity(0.7))
+                                    .foregroundStyle(.blue.opacity(0.7))
                             }
 
                             VStack(spacing: 6) {
-                                Text("Scan your \(mealType.rawValue.lowercased())")
+                                Text("Scan your receipt")
                                     .font(.system(size: 18, weight: .semibold, design: .rounded))
                                     .foregroundStyle(.primary)
 
-                                Text("Take a photo and we'll analyze the nutrition")
+                                Text("Snap a receipt or upload a screenshot for exact ingredient tracking")
                                     .font(.system(size: 13, weight: .regular, design: .rounded))
                                     .foregroundStyle(.tertiary)
                                     .multilineTextAlignment(.center)
+                                    .padding(.horizontal, 16)
                             }
 
                             // Meal type badge
@@ -68,22 +70,24 @@ struct CameraView: View {
                             .clipShape(Capsule())
                         }
                     }
-                    .frame(height: 320)
+                    .frame(height: 300)
                     .padding(.horizontal, 24)
 
                     Spacer()
-                        .frame(height: 40)
+                        .frame(height: 28)
 
                     // Action buttons
-                    VStack(spacing: 14) {
+                    VStack(spacing: 12) {
+                        // Primary: Scan Receipt (camera)
                         Button {
+                            activeScanSource = .receipt
                             pickerSource = .camera
                             showImagePicker = true
                         } label: {
                             HStack(spacing: 10) {
-                                Image(systemName: "camera.fill")
+                                Image(systemName: "doc.text.viewfinder")
                                     .font(.system(size: 18, weight: .semibold))
-                                Text("Take Photo")
+                                Text("Scan Receipt")
                                     .font(.system(size: 17, weight: .semibold, design: .rounded))
                             }
                             .foregroundStyle(.white)
@@ -91,48 +95,50 @@ struct CameraView: View {
                             .frame(height: 56)
                             .background(
                                 LinearGradient(
-                                    colors: [Color(red: 0.2, green: 0.8, blue: 0.4), Color(red: 0.1, green: 0.65, blue: 0.35)],
+                                    colors: [Color(red: 0.2, green: 0.5, blue: 0.95), Color(red: 0.15, green: 0.4, blue: 0.85)],
                                     startPoint: .leading,
                                     endPoint: .trailing
                                 )
                             )
                             .clipShape(RoundedRectangle(cornerRadius: 16))
-                            .shadow(color: .green.opacity(0.35), radius: 12, x: 0, y: 6)
+                            .shadow(color: .blue.opacity(0.35), radius: 12, x: 0, y: 6)
                         }
                         .buttonStyle(ScaleButtonStyle())
 
+                        // Secondary: Upload Receipt Screenshot (photo library)
                         Button {
+                            activeScanSource = .screenshot
                             pickerSource = .photoLibrary
                             showImagePicker = true
                         } label: {
                             HStack(spacing: 10) {
-                                Image(systemName: "photo.on.rectangle")
+                                Image(systemName: "rectangle.on.rectangle")
                                     .font(.system(size: 18, weight: .semibold))
-                                Text("Choose from Library")
+                                Text("Upload Receipt Screenshot")
                                     .font(.system(size: 17, weight: .semibold, design: .rounded))
                             }
-                            .foregroundStyle(.green)
+                            .foregroundStyle(.purple)
                             .frame(maxWidth: .infinity)
                             .frame(height: 56)
-                            .background(Color.green.opacity(0.08))
+                            .background(Color.purple.opacity(0.08))
                             .clipShape(RoundedRectangle(cornerRadius: 16))
                             .overlay(
                                 RoundedRectangle(cornerRadius: 16)
-                                    .strokeBorder(Color.green.opacity(0.2), lineWidth: 1)
+                                    .strokeBorder(Color.purple.opacity(0.2), lineWidth: 1)
                             )
                         }
                         .buttonStyle(ScaleButtonStyle())
 
-                        // Barcode option
+                        // Tertiary: Take Food Photo
                         Button {
-                            // Placeholder for barcode scanning
+                            activeScanSource = .photo
                             pickerSource = .camera
                             showImagePicker = true
                         } label: {
                             HStack(spacing: 10) {
-                                Image(systemName: "barcode.viewfinder")
+                                Image(systemName: "camera.fill")
                                     .font(.system(size: 18, weight: .semibold))
-                                Text("Scan Barcode")
+                                Text("Take Food Photo")
                                     .font(.system(size: 17, weight: .semibold, design: .rounded))
                             }
                             .foregroundStyle(.secondary)
@@ -165,13 +171,13 @@ struct CameraView: View {
                 }
 
                 ToolbarItem(placement: .principal) {
-                    Text("Scan Meal")
+                    Text("Log Meal")
                         .font(.system(size: 17, weight: .semibold, design: .rounded))
                 }
             }
             .sheet(isPresented: $showImagePicker) {
                 ImagePicker(sourceType: pickerSource) { image in
-                    onMealCaptured(image)
+                    onMealCaptured(image, activeScanSource)
                     dismiss()
                 }
                 .ignoresSafeArea()
@@ -181,5 +187,5 @@ struct CameraView: View {
 }
 
 #Preview {
-    CameraView(mealType: .lunch, onMealCaptured: { _ in })
+    CameraView(mealType: .lunch, onMealCaptured: { _, _ in })
 }

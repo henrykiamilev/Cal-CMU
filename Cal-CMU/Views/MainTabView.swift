@@ -11,7 +11,7 @@ enum AppTab: Int, CaseIterable {
         switch self {
         case .home: return "house"
         case .log: return "list.clipboard"
-        case .scan: return "camera"
+        case .scan: return "doc.text.viewfinder"
         case .insights: return "chart.bar"
         case .profile: return "person"
         }
@@ -21,7 +21,7 @@ enum AppTab: Int, CaseIterable {
         switch self {
         case .home: return "house.fill"
         case .log: return "list.clipboard.fill"
-        case .scan: return "camera.fill"
+        case .scan: return "doc.text.viewfinder"
         case .insights: return "chart.bar.fill"
         case .profile: return "person.fill"
         }
@@ -46,6 +46,7 @@ struct MainTabView: View {
     @State private var capturedImage: UIImage?
     @State private var analyzedMeal: Meal?
     @State private var selectedMealType: MealType = .lunch
+    @State private var selectedScanSource: ScanSource = .receipt
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -84,9 +85,10 @@ struct MainTabView: View {
         }
         .ignoresSafeArea(.keyboard)
         .sheet(isPresented: $showCamera) {
-            CameraView(mealType: selectedMealType) { image in
+            CameraView(mealType: selectedMealType) { image, scanSource in
                 capturedImage = image
-                analyzedMeal = store.generateMockAnalysis(from: image, mealType: selectedMealType)
+                selectedScanSource = scanSource
+                analyzedMeal = store.generateMockAnalysis(from: image, mealType: selectedMealType, scanSource: scanSource)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                     showMealDetail = true
                 }
@@ -100,6 +102,7 @@ struct MainTabView: View {
                         savedMeal = Meal(
                             name: meal.name,
                             mealType: meal.mealType,
+                            scanSource: meal.scanSource,
                             calories: meal.calories,
                             protein: meal.protein,
                             carbs: meal.carbs,
@@ -107,6 +110,18 @@ struct MainTabView: View {
                             fiber: meal.fiber,
                             sugar: meal.sugar,
                             sodium: meal.sodium,
+                            vitaminC: meal.vitaminC,
+                            vitaminB6: meal.vitaminB6,
+                            vitaminB12: meal.vitaminB12,
+                            vitaminD: meal.vitaminD,
+                            vitaminA: meal.vitaminA,
+                            potassium: meal.potassium,
+                            iron: meal.iron,
+                            calcium: meal.calcium,
+                            magnesium: meal.magnesium,
+                            zinc: meal.zinc,
+                            receiptItems: meal.receiptItems,
+                            restaurantName: meal.restaurantName,
                             imageData: img.jpegData(compressionQuality: 0.6)
                         )
                     }
@@ -161,7 +176,7 @@ struct MainTabView: View {
                     .frame(width: 58, height: 58)
                     .shadow(color: .green.opacity(0.4), radius: 12, x: 0, y: 6)
 
-                Image(systemName: "camera.fill")
+                Image(systemName: "doc.text.viewfinder")
                     .font(.system(size: 22, weight: .semibold))
                     .foregroundStyle(.white)
             }

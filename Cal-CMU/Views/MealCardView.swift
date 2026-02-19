@@ -34,7 +34,7 @@ struct MealCardView: View {
                     .foregroundStyle(.primary)
                     .lineLimit(1)
 
-                HStack(spacing: 8) {
+                HStack(spacing: 6) {
                     // Meal type badge
                     HStack(spacing: 3) {
                         Image(systemName: meal.mealType.icon)
@@ -48,13 +48,22 @@ struct MealCardView: View {
                     .background(meal.mealType.color.opacity(0.1))
                     .clipShape(Capsule())
 
+                    // Scan source badge
+                    HStack(spacing: 3) {
+                        Image(systemName: meal.scanSource.icon)
+                            .font(.system(size: 8))
+                        Text(meal.scanSource == .photo ? "Photo" : "Receipt")
+                            .font(.system(size: 10, weight: .semibold, design: .rounded))
+                    }
+                    .foregroundStyle(meal.scanSource.color)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 3)
+                    .background(meal.scanSource.color.opacity(0.1))
+                    .clipShape(Capsule())
+
                     Label("\(meal.calories) cal", systemImage: "flame.fill")
                         .font(.system(size: 11, weight: .medium, design: .rounded))
                         .foregroundStyle(.secondary)
-
-                    Text(meal.timeString)
-                        .font(.system(size: 11, weight: .regular, design: .rounded))
-                        .foregroundStyle(.tertiary)
                 }
             }
 

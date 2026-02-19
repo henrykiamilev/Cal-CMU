@@ -13,7 +13,11 @@ struct MealDetailView: View {
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 24) {
                     mealPhotoSection
+                    scanSourceBadge
                     calorieSummarySection
+                    if !meal.receiptItems.isEmpty {
+                        receiptItemsSection
+                    }
                     macroRingsSection
                     nutrientListSection
                     saveButton
@@ -117,6 +121,72 @@ struct MealDetailView: View {
         }
         .opacity(appeared ? 1 : 0)
         .animation(.spring(response: 0.5).delay(0.2), value: appeared)
+    }
+
+    // MARK: - Scan Source Badge
+
+    private var scanSourceBadge: some View {
+        HStack(spacing: 8) {
+            Image(systemName: meal.scanSource.icon)
+                .font(.system(size: 12, weight: .semibold))
+            Text(meal.scanSource.label)
+                .font(.system(size: 13, weight: .semibold, design: .rounded))
+            if let restaurant = meal.restaurantName {
+                Text("·")
+                    .foregroundStyle(.secondary)
+                Text(restaurant)
+                    .font(.system(size: 13, weight: .medium, design: .rounded))
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .foregroundStyle(meal.scanSource.color)
+        .padding(.horizontal, 14)
+        .padding(.vertical, 8)
+        .background(meal.scanSource.color.opacity(0.1))
+        .clipShape(Capsule())
+    }
+
+    // MARK: - Receipt Items
+
+    private var receiptItemsSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Image(systemName: "list.bullet.rectangle")
+                    .font(.system(size: 14))
+                    .foregroundStyle(.blue)
+                Text("Items from Receipt")
+                    .font(.system(size: 17, weight: .semibold, design: .rounded))
+                Spacer()
+                Text("\(meal.receiptItems.count) items")
+                    .font(.system(size: 13, weight: .medium, design: .rounded))
+                    .foregroundStyle(.secondary)
+            }
+
+            ForEach(Array(meal.receiptItems.enumerated()), id: \.offset) { index, item in
+                HStack(spacing: 10) {
+                    Text("\(index + 1)")
+                        .font(.system(size: 12, weight: .bold, design: .rounded))
+                        .foregroundStyle(.white)
+                        .frame(width: 24, height: 24)
+                        .background(Color.blue.opacity(0.7))
+                        .clipShape(Circle())
+
+                    Text(item)
+                        .font(.system(size: 15, weight: .medium, design: .rounded))
+
+                    Spacer()
+                }
+                if index < meal.receiptItems.count - 1 {
+                    Divider()
+                }
+            }
+        }
+        .padding(20)
+        .background(.white)
+        .clipShape(RoundedRectangle(cornerRadius: 22))
+        .shadow(color: .black.opacity(0.05), radius: 12, x: 0, y: 4)
+        .opacity(appeared ? 1 : 0)
+        .animation(.spring(response: 0.5).delay(0.25), value: appeared)
     }
 
     // MARK: - Macro Rings

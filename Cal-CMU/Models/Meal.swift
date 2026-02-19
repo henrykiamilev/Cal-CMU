@@ -39,12 +39,45 @@ enum MealType: String, CaseIterable, Identifiable, Codable {
     }
 }
 
+// MARK: - Scan Source
+
+enum ScanSource: String, Codable {
+    case receipt = "Receipt"
+    case screenshot = "Screenshot"
+    case photo = "Photo"
+
+    var icon: String {
+        switch self {
+        case .receipt: return "doc.text.viewfinder"
+        case .screenshot: return "rectangle.on.rectangle"
+        case .photo: return "camera.fill"
+        }
+    }
+
+    var label: String {
+        switch self {
+        case .receipt: return "Receipt Scan"
+        case .screenshot: return "Screenshot"
+        case .photo: return "Food Photo"
+        }
+    }
+
+    var color: Color {
+        switch self {
+        case .receipt: return .blue
+        case .screenshot: return .purple
+        case .photo: return .green
+        }
+    }
+}
+
 // MARK: - Meal
 
 struct Meal: Identifiable, Equatable, Hashable {
     let id: UUID
     let name: String
     let mealType: MealType
+    let scanSource: ScanSource
     let timestamp: Date
     let calories: Int
     let protein: Double
@@ -65,12 +98,16 @@ struct Meal: Identifiable, Equatable, Hashable {
     let calcium: Double
     let magnesium: Double
     let zinc: Double
+    // Receipt data
+    let receiptItems: [String]
+    let restaurantName: String?
     var imageData: Data?
 
     init(
         id: UUID = UUID(),
         name: String,
         mealType: MealType = .lunch,
+        scanSource: ScanSource = .photo,
         timestamp: Date = Date(),
         calories: Int,
         protein: Double,
@@ -89,11 +126,14 @@ struct Meal: Identifiable, Equatable, Hashable {
         calcium: Double = 0,
         magnesium: Double = 0,
         zinc: Double = 0,
+        receiptItems: [String] = [],
+        restaurantName: String? = nil,
         imageData: Data? = nil
     ) {
         self.id = id
         self.name = name
         self.mealType = mealType
+        self.scanSource = scanSource
         self.timestamp = timestamp
         self.calories = calories
         self.protein = protein
@@ -112,6 +152,8 @@ struct Meal: Identifiable, Equatable, Hashable {
         self.calcium = calcium
         self.magnesium = magnesium
         self.zinc = zinc
+        self.receiptItems = receiptItems
+        self.restaurantName = restaurantName
         self.imageData = imageData
     }
 
@@ -133,15 +175,19 @@ struct Meal: Identifiable, Equatable, Hashable {
         Meal(
             name: "Grilled Chicken Salad",
             mealType: .lunch,
+            scanSource: .receipt,
             timestamp: Calendar.current.date(byAdding: .hour, value: -1, to: Date()) ?? Date(),
             calories: 420, protein: 35, carbs: 28, fat: 18,
             fiber: 6, sugar: 4, sodium: 580,
             vitaminC: 28, vitaminB6: 0.6, vitaminB12: 0.3, vitaminD: 1.2, vitaminA: 180,
-            potassium: 520, iron: 2.8, calcium: 85, magnesium: 42, zinc: 3.1
+            potassium: 520, iron: 2.8, calcium: 85, magnesium: 42, zinc: 3.1,
+            receiptItems: ["Grilled Chicken Breast", "Mixed Greens", "Cherry Tomatoes", "Balsamic Vinaigrette"],
+            restaurantName: "Sweetgreen"
         ),
         Meal(
             name: "Oatmeal with Berries",
             mealType: .breakfast,
+            scanSource: .photo,
             timestamp: Calendar.current.date(byAdding: .hour, value: -5, to: Date()) ?? Date(),
             calories: 310, protein: 12, carbs: 52, fat: 8,
             fiber: 7, sugar: 14, sodium: 120,
@@ -149,22 +195,27 @@ struct Meal: Identifiable, Equatable, Hashable {
             potassium: 280, iron: 3.4, calcium: 110, magnesium: 56, zinc: 1.8
         ),
         Meal(
-            name: "Turkey Wrap",
+            name: "Turkey Club Combo",
             mealType: .dinner,
+            scanSource: .receipt,
             timestamp: Calendar.current.date(byAdding: .hour, value: -9, to: Date()) ?? Date(),
             calories: 480, protein: 28, carbs: 42, fat: 20,
             fiber: 3, sugar: 6, sodium: 720,
             vitaminC: 12, vitaminB6: 0.5, vitaminB12: 1.2, vitaminD: 0.8, vitaminA: 95,
-            potassium: 340, iron: 2.1, calcium: 65, magnesium: 32, zinc: 2.8
+            potassium: 340, iron: 2.1, calcium: 65, magnesium: 32, zinc: 2.8,
+            receiptItems: ["Turkey Club Sandwich", "Side Salad", "Iced Tea"],
+            restaurantName: "Panera Bread"
         ),
         Meal(
             name: "Mixed Nuts",
             mealType: .snack,
+            scanSource: .screenshot,
             timestamp: Calendar.current.date(byAdding: .hour, value: -3, to: Date()) ?? Date(),
             calories: 170, protein: 5, carbs: 8, fat: 14,
             fiber: 2, sugar: 1, sodium: 95,
             vitaminC: 0.5, vitaminB6: 0.1, vitaminB12: 0.0, vitaminD: 0.0, vitaminA: 2,
-            potassium: 210, iron: 1.6, calcium: 38, magnesium: 68, zinc: 1.5
+            potassium: 210, iron: 1.6, calcium: 38, magnesium: 68, zinc: 1.5,
+            receiptItems: ["Trail Mix - Large"]
         ),
     ]
 }
@@ -307,8 +358,39 @@ class MealStore {
 
     // MARK: - Mock Analysis
 
-    func generateMockAnalysis(from image: UIImage, mealType: MealType) -> Meal {
-        // (name, cal, protein, carbs, fat, fiber, sugar, sodium, vitC, B6, B12, vitD, vitA, potassium, iron, calcium, magnesium, zinc)
+    func generateMockAnalysis(from image: UIImage, mealType: MealType, scanSource: ScanSource) -> Meal {
+        if scanSource == .receipt || scanSource == .screenshot {
+            return generateReceiptAnalysis(from: image, mealType: mealType, scanSource: scanSource)
+        } else {
+            return generatePhotoAnalysis(from: image, mealType: mealType)
+        }
+    }
+
+    private func generateReceiptAnalysis(from image: UIImage, mealType: MealType, scanSource: ScanSource) -> Meal {
+        let options: [(name: String, restaurant: String, items: [String], cal: Int, protein: Double, carbs: Double, fat: Double, fiber: Double, sugar: Double, sodium: Double, vitC: Double, b6: Double, b12: Double, vitD: Double, vitA: Double, potassium: Double, iron: Double, calcium: Double, magnesium: Double, zinc: Double)] = [
+            ("Chipotle Burrito Bowl", "Chipotle", ["Chicken", "White Rice", "Black Beans", "Fajita Veggies", "Tomato Salsa", "Cheese", "Lettuce"], 740, 45, 68, 28, 12, 4, 1680, 18, 0.6, 0.4, 0.0, 165, 620, 4.5, 280, 78, 4.2),
+            ("Big Mac Combo", "McDonald's", ["Big Mac", "Medium Fries", "Medium Coke"], 1080, 28, 138, 48, 6, 52, 1340, 4, 0.3, 2.4, 0.0, 45, 680, 4.8, 220, 42, 3.8),
+            ("Spicy Chicken Sandwich", "Chick-fil-A", ["Spicy Chicken Sandwich", "Waffle Fries", "Lemonade"], 920, 34, 108, 38, 4, 42, 1820, 12, 0.4, 0.2, 0.0, 28, 520, 2.8, 65, 36, 2.1),
+            ("Poke Bowl - Regular", "Pokeworks", ["Salmon", "Tuna", "Sushi Rice", "Edamame", "Seaweed Salad", "Sriracha Aioli"], 620, 38, 58, 22, 5, 8, 890, 8, 0.9, 5.2, 8.5, 310, 580, 2.2, 48, 62, 1.8),
+            ("Veggie Delight Sub", "Subway", ["6-inch Wheat Bread", "Lettuce", "Tomato", "Cucumber", "Green Peppers", "Onions", "Provolone"], 340, 16, 42, 12, 6, 5, 680, 22, 0.2, 0.6, 0.0, 95, 260, 2.8, 180, 32, 1.6),
+            ("Acai Supergreens Bowl", "Jamba Juice", ["Acai", "Banana", "Blueberries", "Granola", "Honey", "Chia Seeds"], 470, 10, 82, 14, 11, 38, 45, 42, 0.4, 0.0, 0.0, 65, 420, 2.4, 120, 48, 1.2),
+        ]
+
+        let c = options.randomElement()!
+        return Meal(
+            name: c.name, mealType: mealType, scanSource: scanSource,
+            calories: c.cal, protein: c.protein, carbs: c.carbs, fat: c.fat,
+            fiber: c.fiber, sugar: c.sugar, sodium: c.sodium,
+            vitaminC: c.vitC, vitaminB6: c.b6, vitaminB12: c.b12,
+            vitaminD: c.vitD, vitaminA: c.vitA,
+            potassium: c.potassium, iron: c.iron, calcium: c.calcium,
+            magnesium: c.magnesium, zinc: c.zinc,
+            receiptItems: c.items, restaurantName: c.restaurant,
+            imageData: image.jpegData(compressionQuality: 0.6)
+        )
+    }
+
+    private func generatePhotoAnalysis(from image: UIImage, mealType: MealType) -> Meal {
         let options: [(String, Int, Double, Double, Double, Double, Double, Double, Double, Double, Double, Double, Double, Double, Double, Double, Double, Double)] = [
             ("Grilled Chicken Salad", 420, 35, 28, 18, 6, 4, 580, 28, 0.6, 0.3, 1.2, 180, 520, 2.8, 85, 42, 3.1),
             ("Pasta Bolognese", 650, 28, 72, 24, 4, 8, 890, 10, 0.4, 1.8, 0.3, 120, 610, 4.2, 52, 38, 4.5),
@@ -322,7 +404,7 @@ class MealStore {
 
         let c = options.randomElement()!
         return Meal(
-            name: c.0, mealType: mealType,
+            name: c.0, mealType: mealType, scanSource: .photo,
             calories: c.1, protein: c.2, carbs: c.3, fat: c.4,
             fiber: c.5, sugar: c.6, sodium: c.7,
             vitaminC: c.8, vitaminB6: c.9, vitaminB12: c.10,

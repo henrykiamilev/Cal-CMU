@@ -215,7 +215,7 @@ struct HomeView: View {
             Button {
                 onScanTap()
             } label: {
-                Text("Scan your first meal")
+                Text("Scan a receipt to start")
                     .font(.system(size: 14, weight: .semibold, design: .rounded))
                     .foregroundStyle(.green)
             }
