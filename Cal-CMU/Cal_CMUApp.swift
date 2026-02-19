@@ -8,6 +8,7 @@ struct Cal_CMUApp: App {
         WindowGroup {
             MainTabView()
                 .environment(mealStore)
+                .preferredColorScheme(mealStore.useDarkMode ? .dark : .light)
         }
     }
 }

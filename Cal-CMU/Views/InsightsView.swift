@@ -20,9 +20,6 @@ struct InsightsView: View {
                     // Macro split
                     macroSplitCard
 
-                    // Nutrition score
-                    nutritionScoreCard
-
                     // Top nutrients
                     topNutrientsCard
 
@@ -61,7 +58,7 @@ struct InsightsView: View {
             )
         }
         .padding(.vertical, 16)
-        .background(.white)
+        .background(Color(.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .shadow(color: .black.opacity(0.04), radius: 8, x: 0, y: 4)
     }
@@ -95,7 +92,7 @@ struct InsightsView: View {
             Text("Macro Split")
                 .font(.system(size: 17, weight: .semibold, design: .rounded))
 
-            HStack(spacing: 20) {
+            HStack(spacing: 16) {
                 // Donut chart
                 ZStack {
                     let p = store.macroPercentages
@@ -141,10 +138,12 @@ struct InsightsView: View {
                     macroLegend("Carbs", pct: store.macroPercentages.carbs, grams: store.totalCarbsToday, color: .orange)
                     macroLegend("Fat", pct: store.macroPercentages.fat, grams: store.totalFatToday, color: .pink)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .padding(20)
-        .background(.white)
+        .background(Color(.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 4)
         .onAppear { animateScore = true }
@@ -166,64 +165,6 @@ struct InsightsView: View {
         }
     }
 
-    // MARK: - Nutrition Score
-
-    private var nutritionScoreCard: some View {
-        HStack(spacing: 16) {
-            ZStack {
-                Circle()
-                    .stroke(Color(.systemGray5), lineWidth: 10)
-                    .frame(width: 80, height: 80)
-
-                Circle()
-                    .trim(from: 0, to: animateScore ? Double(store.nutritionScore) / 100.0 : 0)
-                    .stroke(scoreColor.gradient, style: StrokeStyle(lineWidth: 10, lineCap: .round))
-                    .frame(width: 80, height: 80)
-                    .rotationEffect(.degrees(-90))
-                    .animation(.spring(response: 1.0, dampingFraction: 0.7), value: animateScore)
-
-                Text("\(store.nutritionScore)")
-                    .font(.system(size: 22, weight: .bold, design: .rounded))
-                    .foregroundStyle(scoreColor)
-            }
-
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Nutrition Score")
-                    .font(.system(size: 17, weight: .semibold, design: .rounded))
-
-                Text(scoreMessage)
-                    .font(.system(size: 14, weight: .medium, design: .rounded))
-                    .foregroundStyle(.secondary)
-
-                HStack(spacing: 4) {
-                    ForEach(0..<5) { i in
-                        Image(systemName: i < store.nutritionScore / 20 ? "star.fill" : "star")
-                            .font(.system(size: 12))
-                            .foregroundStyle(.yellow)
-                    }
-                }
-            }
-
-            Spacer()
-        }
-        .padding(20)
-        .background(.white)
-        .clipShape(RoundedRectangle(cornerRadius: 20))
-        .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 4)
-    }
-
-    private var scoreColor: Color {
-        if store.nutritionScore >= 80 { return .green }
-        if store.nutritionScore >= 60 { return .yellow }
-        return .orange
-    }
-
-    private var scoreMessage: String {
-        if store.nutritionScore >= 80 { return "Great balance! Keep it up." }
-        if store.nutritionScore >= 60 { return "Good progress today." }
-        return "Room for improvement."
-    }
-
     // MARK: - Top Nutrients
 
     private var topNutrientsCard: some View {
@@ -240,7 +181,7 @@ struct InsightsView: View {
             nutrientDetailRow("Calcium", value: "\(Int(store.totalCalciumToday))", unit: "mg", icon: "bone.fill", color: .gray)
         }
         .padding(20)
-        .background(.white)
+        .background(Color(.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 4)
     }

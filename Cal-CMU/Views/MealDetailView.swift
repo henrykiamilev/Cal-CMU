@@ -182,7 +182,7 @@ struct MealDetailView: View {
             }
         }
         .padding(20)
-        .background(.white)
+        .background(Color(.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 22))
         .shadow(color: .black.opacity(0.05), radius: 12, x: 0, y: 4)
         .opacity(appeared ? 1 : 0)
@@ -198,7 +198,7 @@ struct MealDetailView: View {
             macroRing(label: "Fat", value: meal.fat, color: .pink)
         }
         .padding(20)
-        .background(.white)
+        .background(Color(.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 22))
         .shadow(color: .black.opacity(0.05), radius: 12, x: 0, y: 4)
         .opacity(appeared ? 1 : 0)
@@ -285,7 +285,7 @@ struct MealDetailView: View {
             nutrientRow(name: "Zinc", value: String(format: "%.1f mg", meal.zinc), icon: "shield.fill", color: .mint)
         }
         .padding(20)
-        .background(.white)
+        .background(Color(.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 22))
         .shadow(color: .black.opacity(0.05), radius: 12, x: 0, y: 4)
         .opacity(appeared ? 1 : 0)

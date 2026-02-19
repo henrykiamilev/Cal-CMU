@@ -95,7 +95,7 @@ struct HomeView: View {
         }
         .frame(maxWidth: .infinity)
         .padding(20)
-        .background(.white)
+        .background(Color(.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 24))
         .shadow(color: .black.opacity(0.05), radius: 12, x: 0, y: 6)
     }
@@ -124,7 +124,7 @@ struct HomeView: View {
             )
         }
         .padding(20)
-        .background(.white)
+        .background(Color(.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 24))
         .shadow(color: .black.opacity(0.05), radius: 12, x: 0, y: 6)
     }
@@ -169,7 +169,7 @@ struct HomeView: View {
             }
         }
         .padding(18)
-        .background(.white)
+        .background(Color(.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 4)
     }
@@ -222,7 +222,7 @@ struct HomeView: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 40)
-        .background(.white)
+        .background(Color(.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .shadow(color: .black.opacity(0.04), radius: 8, x: 0, y: 4)
     }

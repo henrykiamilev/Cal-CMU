@@ -47,6 +47,7 @@ struct MealCardView: View {
                     .padding(.vertical, 3)
                     .background(meal.mealType.color.opacity(0.1))
                     .clipShape(Capsule())
+                    .fixedSize()
 
                     // Scan source badge
                     HStack(spacing: 3) {
@@ -60,10 +61,12 @@ struct MealCardView: View {
                     .padding(.vertical, 3)
                     .background(meal.scanSource.color.opacity(0.1))
                     .clipShape(Capsule())
+                    .fixedSize()
 
                     Label("\(meal.calories) cal", systemImage: "flame.fill")
                         .font(.system(size: 11, weight: .medium, design: .rounded))
                         .foregroundStyle(.secondary)
+                        .fixedSize()
                 }
             }
 
@@ -77,7 +80,7 @@ struct MealCardView: View {
             }
         }
         .padding(14)
-        .background(.white)
+        .background(Color(.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 4)
     }

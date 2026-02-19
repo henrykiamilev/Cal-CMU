@@ -69,7 +69,7 @@ struct ProfileView: View {
         }
         .frame(maxWidth: .infinity)
         .padding(20)
-        .background(.white)
+        .background(Color(.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 24))
         .shadow(color: .black.opacity(0.05), radius: 12, x: 0, y: 6)
     }
@@ -117,7 +117,7 @@ struct ProfileView: View {
             goalRow(icon: "drop.triangle.fill", color: .pink, label: "Fat", value: "\(Int(store.dailyFatGoal))g")
         }
         .padding(18)
-        .background(.white)
+        .background(Color(.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .shadow(color: .black.opacity(0.04), radius: 8, x: 0, y: 4)
     }
@@ -156,7 +156,7 @@ struct ProfileView: View {
             infoRow(icon: "ruler.fill", color: .purple, label: "Height", value: heightString)
         }
         .padding(18)
-        .background(.white)
+        .background(Color(.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .shadow(color: .black.opacity(0.04), radius: 8, x: 0, y: 4)
     }
@@ -237,7 +237,7 @@ struct ProfileView: View {
             }
         }
         .padding(18)
-        .background(.white)
+        .background(Color(.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .shadow(color: .black.opacity(0.04), radius: 8, x: 0, y: 4)
     }
@@ -271,7 +271,7 @@ struct ProfileView: View {
                     .foregroundStyle(Color(.systemGray3))
             }
             .padding(18)
-            .background(.white)
+            .background(Color(.secondarySystemGroupedBackground))
             .clipShape(RoundedRectangle(cornerRadius: 20))
             .shadow(color: .black.opacity(0.04), radius: 8, x: 0, y: 4)
         }

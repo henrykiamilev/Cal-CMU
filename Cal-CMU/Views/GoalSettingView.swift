@@ -134,7 +134,7 @@ struct GoalSettingView: View {
             }
         }
         .padding(18)
-        .background(.white)
+        .background(Color(.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 18))
         .shadow(color: .black.opacity(0.04), radius: 6, x: 0, y: 3)
     }
@@ -168,7 +168,7 @@ struct GoalSettingView: View {
             }
         }
         .padding(18)
-        .background(.white)
+        .background(Color(.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 18))
         .shadow(color: .black.opacity(0.04), radius: 6, x: 0, y: 3)
     }

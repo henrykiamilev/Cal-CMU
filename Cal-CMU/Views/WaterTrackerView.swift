@@ -79,7 +79,7 @@ struct WaterTrackerView: View {
             .frame(height: 6)
         }
         .padding(18)
-        .background(.white)
+        .background(Color(.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 4)
     }

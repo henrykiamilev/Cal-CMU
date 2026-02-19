@@ -78,7 +78,7 @@ struct WeeklyChartView: View {
             }
         }
         .padding(20)
-        .background(.white)
+        .background(Color(.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 4)
         .onAppear { animateChart = true }
