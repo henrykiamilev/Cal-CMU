@@ -20,15 +20,11 @@ struct Cal_CMUApp: App {
                         .environment(authManager)
                 }
             }
-            .onOpenURL { url in
-                Task {
-                    await authManager.handleURL(url)
-                }
-            }
             .onChange(of: authManager.isAuthenticated) { _, isAuth in
-                if isAuth {
-                    if !authManager.userName.isEmpty {
-                        mealStore.userName = authManager.userName.components(separatedBy: " ").first ?? authManager.userName
+                if isAuth && !authManager.userEmail.isEmpty {
+                    let emailPrefix = authManager.userEmail.components(separatedBy: "@").first ?? ""
+                    if !emailPrefix.isEmpty {
+                        mealStore.userName = emailPrefix
                     }
                 }
             }

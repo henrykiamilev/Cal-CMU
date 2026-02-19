@@ -2,6 +2,11 @@ import Foundation
 import SwiftUI
 import Supabase
 
+enum AuthStep {
+    case enterEmail
+    case enterOTP
+}
+
 @Observable
 class AuthManager {
     var isAuthenticated = false
@@ -9,8 +14,14 @@ class AuthManager {
     var currentUser: User?
     var userName: String = ""
     var userEmail: String = ""
-    var userAvatarURL: URL?
     var errorMessage: String?
+
+    // Login flow state
+    var authStep: AuthStep = .enterEmail
+    var emailInput: String = ""
+    var otpCode: String = ""
+    var isSendingOTP = false
+    var isVerifying = false
 
     private var authStateTask: Task<Void, Never>?
 
@@ -46,7 +57,6 @@ class AuthManager {
                     self.currentUser = nil
                     self.userName = ""
                     self.userEmail = ""
-                    self.userAvatarURL = nil
                 default:
                     break
                 }
@@ -59,34 +69,84 @@ class AuthManager {
         isAuthenticated = true
         userEmail = user.email ?? ""
 
-        // Extract name and avatar from user metadata
         if let metadata = user.userMetadata {
             if let name = metadata["full_name"]?.value as? String {
                 userName = name
             } else if let name = metadata["name"]?.value as? String {
                 userName = name
             }
-            if let avatar = metadata["avatar_url"]?.value as? String,
-               let url = URL(string: avatar) {
-                userAvatarURL = url
+        }
+    }
+
+    // MARK: - Send OTP
+
+    func sendOTP() async {
+        errorMessage = nil
+        await MainActor.run { isSendingOTP = true }
+
+        do {
+            let trimmed = emailInput.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !trimmed.isEmpty else {
+                await MainActor.run {
+                    errorMessage = "Please enter your email address"
+                    isSendingOTP = false
+                }
+                return
+            }
+            try await SupabaseConfig.client.auth.signInWithOTP(email: trimmed)
+
+            await MainActor.run {
+                authStep = .enterOTP
+                isSendingOTP = false
+            }
+        } catch {
+            await MainActor.run {
+                errorMessage = error.localizedDescription
+                isSendingOTP = false
             }
         }
     }
 
-    // MARK: - Google Sign In
+    // MARK: - Verify OTP
 
-    func signInWithGoogle() async {
+    func verifyOTP() async {
         errorMessage = nil
+        await MainActor.run { isVerifying = true }
+
         do {
-            try await SupabaseConfig.client.auth.signInWithOAuth(
-                provider: .google,
-                redirectTo: SupabaseConfig.redirectURL
+            let code = otpCode.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard code.count == 6 else {
+                await MainActor.run {
+                    errorMessage = "Please enter the 6-digit code"
+                    isVerifying = false
+                }
+                return
+            }
+
+            let trimmed = emailInput.trimmingCharacters(in: .whitespacesAndNewlines)
+            try await SupabaseConfig.client.auth.verifyOTP(
+                email: trimmed,
+                token: code,
+                type: .email
             )
+
+            await MainActor.run {
+                isVerifying = false
+            }
         } catch {
             await MainActor.run {
                 errorMessage = error.localizedDescription
+                isVerifying = false
             }
         }
+    }
+
+    // MARK: - Reset Flow
+
+    func resetToEmailEntry() {
+        authStep = .enterEmail
+        otpCode = ""
+        errorMessage = nil
     }
 
     // MARK: - Sign Out
@@ -99,20 +159,10 @@ class AuthManager {
                 currentUser = nil
                 userName = ""
                 userEmail = ""
-                userAvatarURL = nil
+                authStep = .enterEmail
+                emailInput = ""
+                otpCode = ""
             }
-        } catch {
-            await MainActor.run {
-                errorMessage = error.localizedDescription
-            }
-        }
-    }
-
-    // MARK: - Handle Callback URL
-
-    func handleURL(_ url: URL) async {
-        do {
-            try await SupabaseConfig.client.auth.session(from: url)
         } catch {
             await MainActor.run {
                 errorMessage = error.localizedDescription

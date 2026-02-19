@@ -2,8 +2,11 @@ import SwiftUI
 
 struct LoginView: View {
     @Environment(AuthManager.self) private var authManager
+    @FocusState private var isInputFocused: Bool
 
     var body: some View {
+        @Bindable var auth = authManager
+
         ZStack {
             // Background gradient
             LinearGradient(
@@ -15,6 +18,7 @@ struct LoginView: View {
                 endPoint: .bottom
             )
             .ignoresSafeArea()
+            .onTapGesture { isInputFocused = false }
 
             VStack(spacing: 0) {
                 Spacer()
@@ -90,41 +94,11 @@ struct LoginView: View {
 
                 // Sign in section
                 VStack(spacing: 16) {
-                    // Google Sign In button
-                    Button {
-                        Task {
-                            await authManager.signInWithGoogle()
-                        }
-                    } label: {
-                        HStack(spacing: 12) {
-                            // Google "G" logo
-                            ZStack {
-                                Circle()
-                                    .fill(.white)
-                                    .frame(width: 24, height: 24)
-
-                                Text("G")
-                                    .font(.system(size: 15, weight: .bold, design: .rounded))
-                                    .foregroundStyle(
-                                        LinearGradient(
-                                            colors: [.red, .yellow, .green, .blue],
-                                            startPoint: .topLeading,
-                                            endPoint: .bottomTrailing
-                                        )
-                                    )
-                            }
-
-                            Text("Continue with Google")
-                                .font(.system(size: 17, weight: .semibold, design: .rounded))
-                        }
-                        .foregroundStyle(.black)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 56)
-                        .background(.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 16))
-                        .shadow(color: .white.opacity(0.1), radius: 12, x: 0, y: 6)
+                    if authManager.authStep == .enterEmail {
+                        emailEntryView
+                    } else {
+                        otpVerificationView
                     }
-                    .buttonStyle(ScaleButtonStyle())
 
                     // Error message
                     if let error = authManager.errorMessage {
@@ -144,6 +118,148 @@ struct LoginView: View {
                 }
                 .padding(.horizontal, 24)
                 .padding(.bottom, 50)
+            }
+        }
+    }
+
+    // MARK: - Email Entry
+
+    private var emailEntryView: some View {
+        @Bindable var auth = authManager
+
+        return VStack(spacing: 16) {
+            // Email input
+            TextField("", text: $auth.emailInput, prompt: Text("Email address").foregroundStyle(.white.opacity(0.35)))
+                .textContentType(.emailAddress)
+                .keyboardType(.emailAddress)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+                .font(.system(size: 17, weight: .medium, design: .rounded))
+                .foregroundStyle(.white)
+                .padding(.horizontal, 20)
+                .frame(height: 56)
+                .background(Color.white.opacity(0.08))
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .focused($isInputFocused)
+
+            // Send Code button
+            Button {
+                isInputFocused = false
+                Task {
+                    await authManager.sendOTP()
+                }
+            } label: {
+                HStack(spacing: 10) {
+                    if authManager.isSendingOTP {
+                        ProgressView()
+                            .tint(.black)
+                            .scaleEffect(0.9)
+                    }
+
+                    Text(authManager.isSendingOTP ? "Sending..." : "Continue with Email")
+                        .font(.system(size: 17, weight: .semibold, design: .rounded))
+                }
+                .foregroundStyle(.black)
+                .frame(maxWidth: .infinity)
+                .frame(height: 56)
+                .background(
+                    LinearGradient(
+                        colors: [Color(red: 0.2, green: 0.8, blue: 0.4), Color(red: 0.15, green: 0.7, blue: 0.35)],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .shadow(color: .green.opacity(0.3), radius: 12, x: 0, y: 6)
+            }
+            .disabled(authManager.isSendingOTP)
+            .buttonStyle(ScaleButtonStyle())
+        }
+    }
+
+    // MARK: - OTP Verification
+
+    private var otpVerificationView: some View {
+        @Bindable var auth = authManager
+
+        return VStack(spacing: 16) {
+            // Info
+            VStack(spacing: 8) {
+                Text("Enter verification code")
+                    .font(.system(size: 18, weight: .semibold, design: .rounded))
+                    .foregroundStyle(.white)
+
+                Text("We sent a 6-digit code to \(authManager.emailInput)")
+                    .font(.system(size: 14, weight: .regular, design: .rounded))
+                    .foregroundStyle(.white.opacity(0.5))
+                    .multilineTextAlignment(.center)
+            }
+
+            // OTP input
+            TextField("", text: $auth.otpCode, prompt: Text("000000").foregroundStyle(.white.opacity(0.25)))
+                .font(.system(size: 28, weight: .bold, design: .monospaced))
+                .foregroundStyle(.white)
+                .multilineTextAlignment(.center)
+                .keyboardType(.numberPad)
+                .textContentType(.oneTimeCode)
+                .padding(.horizontal, 20)
+                .frame(height: 64)
+                .background(Color.white.opacity(0.08))
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .focused($isInputFocused)
+
+            // Verify button
+            Button {
+                isInputFocused = false
+                Task {
+                    await authManager.verifyOTP()
+                }
+            } label: {
+                HStack(spacing: 10) {
+                    if authManager.isVerifying {
+                        ProgressView()
+                            .tint(.black)
+                            .scaleEffect(0.9)
+                    }
+
+                    Text(authManager.isVerifying ? "Verifying..." : "Verify & Sign In")
+                        .font(.system(size: 17, weight: .semibold, design: .rounded))
+                }
+                .foregroundStyle(.black)
+                .frame(maxWidth: .infinity)
+                .frame(height: 56)
+                .background(
+                    LinearGradient(
+                        colors: [Color(red: 0.2, green: 0.8, blue: 0.4), Color(red: 0.15, green: 0.7, blue: 0.35)],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .shadow(color: .green.opacity(0.3), radius: 12, x: 0, y: 6)
+            }
+            .disabled(authManager.isVerifying)
+            .buttonStyle(ScaleButtonStyle())
+
+            // Resend / Change email
+            HStack(spacing: 20) {
+                Button {
+                    Task {
+                        await authManager.sendOTP()
+                    }
+                } label: {
+                    Text("Resend Code")
+                        .font(.system(size: 14, weight: .medium, design: .rounded))
+                        .foregroundStyle(.green)
+                }
+
+                Button {
+                    authManager.resetToEmailEntry()
+                } label: {
+                    Text("Change Email")
+                        .font(.system(size: 14, weight: .medium, design: .rounded))
+                        .foregroundStyle(.white.opacity(0.5))
+                }
             }
         }
     }
