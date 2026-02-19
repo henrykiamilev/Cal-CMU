@@ -18,6 +18,14 @@
 		A1B2C3D4E5F6000200000009 /* Meal.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000009 /* Meal.swift */; };
 		A1B2C3D4E5F600020000000A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F600010000000A /* Assets.xcassets */; };
 		A1B2C3D4E5F600020000000B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F600010000000B /* Preview Assets.xcassets */; };
+		A1B2C3D4E5F600020000000C /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F600010000000D /* MainTabView.swift */; };
+		A1B2C3D4E5F600020000000D /* WaterTrackerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F600010000000E /* WaterTrackerView.swift */; };
+		A1B2C3D4E5F600020000000E /* StreakBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F600010000000F /* StreakBadgeView.swift */; };
+		A1B2C3D4E5F600020000000F /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000010 /* LogView.swift */; };
+		A1B2C3D4E5F6000200000010 /* InsightsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000011 /* InsightsView.swift */; };
+		A1B2C3D4E5F6000200000011 /* WeeklyChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000012 /* WeeklyChartView.swift */; };
+		A1B2C3D4E5F6000200000012 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000013 /* ProfileView.swift */; };
+		A1B2C3D4E5F6000200000013 /* GoalSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000014 /* GoalSettingView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +41,14 @@
 		A1B2C3D4E5F600010000000A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A1B2C3D4E5F600010000000B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		A1B2C3D4E5F600010000000C /* Cal-CMU.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cal-CMU.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1B2C3D4E5F600010000000D /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F600010000000E /* WaterTrackerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterTrackerView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F600010000000F /* StreakBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakBadgeView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6000100000010 /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6000100000011 /* InsightsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6000100000012 /* WeeklyChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyChartView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6000100000013 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6000100000014 /* GoalSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalSettingView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,13 +85,21 @@
 		A1B2C3D4E5F6000300000003 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				A1B2C3D4E5F600010000000D /* MainTabView.swift */,
 				A1B2C3D4E5F6000100000002 /* HomeView.swift */,
 				A1B2C3D4E5F6000100000003 /* CalorieRingView.swift */,
 				A1B2C3D4E5F6000100000004 /* MacroBarView.swift */,
+				A1B2C3D4E5F600010000000E /* WaterTrackerView.swift */,
+				A1B2C3D4E5F600010000000F /* StreakBadgeView.swift */,
 				A1B2C3D4E5F6000100000005 /* MealCardView.swift */,
+				A1B2C3D4E5F6000100000010 /* LogView.swift */,
 				A1B2C3D4E5F6000100000006 /* CameraView.swift */,
 				A1B2C3D4E5F6000100000007 /* MealDetailView.swift */,
 				A1B2C3D4E5F6000100000008 /* ImagePicker.swift */,
+				A1B2C3D4E5F6000100000011 /* InsightsView.swift */,
+				A1B2C3D4E5F6000100000012 /* WeeklyChartView.swift */,
+				A1B2C3D4E5F6000100000013 /* ProfileView.swift */,
+				A1B2C3D4E5F6000100000014 /* GoalSettingView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -175,13 +199,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				A1B2C3D4E5F6000200000001 /* Cal_CMUApp.swift in Sources */,
+				A1B2C3D4E5F600020000000C /* MainTabView.swift in Sources */,
 				A1B2C3D4E5F6000200000002 /* HomeView.swift in Sources */,
 				A1B2C3D4E5F6000200000003 /* CalorieRingView.swift in Sources */,
 				A1B2C3D4E5F6000200000004 /* MacroBarView.swift in Sources */,
+				A1B2C3D4E5F600020000000D /* WaterTrackerView.swift in Sources */,
+				A1B2C3D4E5F600020000000E /* StreakBadgeView.swift in Sources */,
 				A1B2C3D4E5F6000200000005 /* MealCardView.swift in Sources */,
+				A1B2C3D4E5F600020000000F /* LogView.swift in Sources */,
 				A1B2C3D4E5F6000200000006 /* CameraView.swift in Sources */,
 				A1B2C3D4E5F6000200000007 /* MealDetailView.swift in Sources */,
 				A1B2C3D4E5F6000200000008 /* ImagePicker.swift in Sources */,
+				A1B2C3D4E5F6000200000010 /* InsightsView.swift in Sources */,
+				A1B2C3D4E5F6000200000011 /* WeeklyChartView.swift in Sources */,
+				A1B2C3D4E5F6000200000012 /* ProfileView.swift in Sources */,
+				A1B2C3D4E5F6000200000013 /* GoalSettingView.swift in Sources */,
 				A1B2C3D4E5F6000200000009 /* Meal.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

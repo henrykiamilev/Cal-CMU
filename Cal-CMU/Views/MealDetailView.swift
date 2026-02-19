@@ -10,26 +10,16 @@ struct MealDetailView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
+            ScrollView(showsIndicators: false) {
                 VStack(spacing: 24) {
-                    // Meal photo
                     mealPhotoSection
-
-                    // Calorie summary
                     calorieSummarySection
-
-                    // Macronutrient rings
                     macroRingsSection
-
-                    // Detailed nutrients
                     nutrientListSection
-
-                    // Save button
                     saveButton
-
                     Color.clear.frame(height: 20)
                 }
-                .padding(.horizontal)
+                .padding(.horizontal, 20)
             }
             .background(Color(.systemGroupedBackground))
             .navigationBarTitleDisplayMode(.inline)
@@ -39,7 +29,7 @@ struct MealDetailView: View {
                         dismiss()
                     } label: {
                         Image(systemName: "xmark")
-                            .font(.system(size: 15, weight: .semibold))
+                            .font(.system(size: 14, weight: .semibold))
                             .foregroundStyle(.secondary)
                             .frame(width: 32, height: 32)
                             .background(Color(.systemGray5))
@@ -55,33 +45,45 @@ struct MealDetailView: View {
         }
     }
 
-    // MARK: - Meal Photo
+    // MARK: - Photo
 
     private var mealPhotoSection: some View {
-        Group {
-            if let image = capturedImage {
-                Image(uiImage: image)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(height: 240)
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
-                    .shadow(color: .black.opacity(0.1), radius: 12, x: 0, y: 6)
-            } else {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(
-                            LinearGradient(
-                                colors: [Color.green.opacity(0.15), Color.green.opacity(0.05)],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
+        ZStack(alignment: .bottomLeading) {
+            Group {
+                if let image = capturedImage {
+                    Image(uiImage: image)
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                } else {
+                    ZStack {
+                        LinearGradient(
+                            colors: meal.mealType.gradient.map { $0.opacity(0.15) },
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
                         )
-                    Image(systemName: "fork.knife")
-                        .font(.system(size: 48))
-                        .foregroundStyle(.green.opacity(0.4))
+                        Image(systemName: "fork.knife")
+                            .font(.system(size: 48))
+                            .foregroundStyle(meal.mealType.color.opacity(0.3))
+                    }
                 }
-                .frame(height: 240)
             }
+            .frame(height: 260)
+            .clipShape(RoundedRectangle(cornerRadius: 24))
+            .shadow(color: .black.opacity(0.1), radius: 16, x: 0, y: 8)
+
+            // Meal type badge overlay
+            HStack(spacing: 6) {
+                Image(systemName: meal.mealType.icon)
+                    .font(.system(size: 11))
+                Text(meal.mealType.rawValue)
+                    .font(.system(size: 12, weight: .semibold, design: .rounded))
+            }
+            .foregroundStyle(.white)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 6)
+            .background(.ultraThinMaterial)
+            .clipShape(Capsule())
+            .padding(16)
         }
         .padding(.top, 8)
         .opacity(appeared ? 1 : 0)
@@ -96,17 +98,20 @@ struct MealDetailView: View {
     // MARK: - Calorie Summary
 
     private var calorieSummarySection: some View {
-        VStack(spacing: 6) {
+        VStack(spacing: 8) {
             Text(meal.name)
-                .font(.system(size: 22, weight: .bold, design: .rounded))
+                .font(.system(size: 24, weight: .bold, design: .rounded))
                 .multilineTextAlignment(.center)
 
-            HStack(spacing: 6) {
+            HStack(spacing: 8) {
                 Image(systemName: "flame.fill")
                     .foregroundStyle(.orange)
-                    .font(.system(size: 16))
-                Text("\(meal.calories) calories")
-                    .font(.system(size: 18, weight: .semibold, design: .rounded))
+                    .font(.system(size: 18))
+                Text("\(meal.calories)")
+                    .font(.system(size: 28, weight: .bold, design: .rounded))
+                    .contentTransition(.numericText())
+                Text("calories")
+                    .font(.system(size: 16, weight: .medium, design: .rounded))
                     .foregroundStyle(.secondary)
             }
         }
@@ -117,50 +122,36 @@ struct MealDetailView: View {
     // MARK: - Macro Rings
 
     private var macroRingsSection: some View {
-        HStack(spacing: 20) {
-            macroRing(
-                label: "Protein",
-                value: meal.protein,
-                color: .blue,
-                icon: "p"
-            )
-            macroRing(
-                label: "Carbs",
-                value: meal.carbs,
-                color: .orange,
-                icon: "c"
-            )
-            macroRing(
-                label: "Fat",
-                value: meal.fat,
-                color: .pink,
-                icon: "f"
-            )
+        HStack(spacing: 16) {
+            macroRing(label: "Protein", value: meal.protein, color: .blue)
+            macroRing(label: "Carbs", value: meal.carbs, color: .orange)
+            macroRing(label: "Fat", value: meal.fat, color: .pink)
         }
         .padding(20)
         .background(.white)
-        .clipShape(RoundedRectangle(cornerRadius: 20))
-        .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 4)
+        .clipShape(RoundedRectangle(cornerRadius: 22))
+        .shadow(color: .black.opacity(0.05), radius: 12, x: 0, y: 4)
         .opacity(appeared ? 1 : 0)
         .animation(.spring(response: 0.5).delay(0.3), value: appeared)
     }
 
-    private func macroRing(label: String, value: Double, color: Color, icon: String) -> some View {
+    private func macroRing(label: String, value: Double, color: Color) -> some View {
         VStack(spacing: 8) {
             ZStack {
                 Circle()
-                    .stroke(color.opacity(0.15), lineWidth: 8)
-                    .frame(width: 70, height: 70)
+                    .stroke(color.opacity(0.12), lineWidth: 10)
+                    .frame(width: 76, height: 76)
 
                 Circle()
                     .trim(from: 0, to: appeared ? min(value / 100, 1.0) : 0)
-                    .stroke(color.gradient, style: StrokeStyle(lineWidth: 8, lineCap: .round))
-                    .frame(width: 70, height: 70)
+                    .stroke(color.gradient, style: StrokeStyle(lineWidth: 10, lineCap: .round))
+                    .frame(width: 76, height: 76)
                     .rotationEffect(.degrees(-90))
                     .animation(.spring(response: 0.8, dampingFraction: 0.7).delay(0.4), value: appeared)
+                    .shadow(color: color.opacity(0.2), radius: 4, x: 0, y: 2)
 
                 Text("\(Int(value))g")
-                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .font(.system(size: 15, weight: .bold, design: .rounded))
                     .foregroundStyle(color)
             }
 
@@ -171,30 +162,30 @@ struct MealDetailView: View {
         .frame(maxWidth: .infinity)
     }
 
-    // MARK: - Nutrient List
+    // MARK: - Nutrients
 
     private var nutrientListSection: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("Nutrients")
+            Text("Detailed Nutrients")
                 .font(.system(size: 17, weight: .semibold, design: .rounded))
-                .padding(.bottom, 12)
+                .padding(.bottom, 14)
 
-            nutrientRow(name: "Fiber", value: "\(Int(meal.fiber))g", icon: "leaf.fill", color: .green)
-            Divider().padding(.vertical, 8)
-            nutrientRow(name: "Sugar", value: "\(Int(meal.sugar))g", icon: "cube.fill", color: .purple)
-            Divider().padding(.vertical, 8)
-            nutrientRow(name: "Sodium", value: "\(Int(meal.sodium))mg", icon: "drop.fill", color: .cyan)
-            Divider().padding(.vertical, 8)
             nutrientRow(name: "Protein", value: "\(Int(meal.protein))g", icon: "circle.hexagongrid.fill", color: .blue)
-            Divider().padding(.vertical, 8)
+            Divider().padding(.vertical, 10)
             nutrientRow(name: "Carbohydrates", value: "\(Int(meal.carbs))g", icon: "bolt.fill", color: .orange)
-            Divider().padding(.vertical, 8)
+            Divider().padding(.vertical, 10)
             nutrientRow(name: "Total Fat", value: "\(Int(meal.fat))g", icon: "drop.triangle.fill", color: .pink)
+            Divider().padding(.vertical, 10)
+            nutrientRow(name: "Fiber", value: "\(Int(meal.fiber))g", icon: "leaf.fill", color: .green)
+            Divider().padding(.vertical, 10)
+            nutrientRow(name: "Sugar", value: "\(Int(meal.sugar))g", icon: "cube.fill", color: .purple)
+            Divider().padding(.vertical, 10)
+            nutrientRow(name: "Sodium", value: "\(Int(meal.sodium))mg", icon: "drop.fill", color: .cyan)
         }
         .padding(20)
         .background(.white)
-        .clipShape(RoundedRectangle(cornerRadius: 20))
-        .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 4)
+        .clipShape(RoundedRectangle(cornerRadius: 22))
+        .shadow(color: .black.opacity(0.05), radius: 12, x: 0, y: 4)
         .opacity(appeared ? 1 : 0)
         .animation(.spring(response: 0.5).delay(0.4), value: appeared)
     }
@@ -204,23 +195,22 @@ struct MealDetailView: View {
             Image(systemName: icon)
                 .font(.system(size: 14))
                 .foregroundStyle(color)
-                .frame(width: 28, height: 28)
+                .frame(width: 30, height: 30)
                 .background(color.opacity(0.1))
                 .clipShape(RoundedRectangle(cornerRadius: 8))
 
             Text(name)
                 .font(.system(size: 15, weight: .medium, design: .rounded))
-                .foregroundStyle(.primary)
 
             Spacer()
 
             Text(value)
-                .font(.system(size: 15, weight: .semibold, design: .rounded))
+                .font(.system(size: 15, weight: .bold, design: .rounded))
                 .foregroundStyle(.secondary)
         }
     }
 
-    // MARK: - Save Button
+    // MARK: - Save
 
     private var saveButton: some View {
         Button {
@@ -235,11 +225,18 @@ struct MealDetailView: View {
             }
             .foregroundStyle(.white)
             .frame(maxWidth: .infinity)
-            .frame(height: 54)
-            .background(Color.green.gradient)
+            .frame(height: 56)
+            .background(
+                LinearGradient(
+                    colors: [Color(red: 0.2, green: 0.8, blue: 0.4), Color(red: 0.1, green: 0.65, blue: 0.35)],
+                    startPoint: .leading,
+                    endPoint: .trailing
+                )
+            )
             .clipShape(RoundedRectangle(cornerRadius: 16))
-            .shadow(color: .green.opacity(0.3), radius: 12, x: 0, y: 6)
+            .shadow(color: .green.opacity(0.35), radius: 12, x: 0, y: 6)
         }
+        .buttonStyle(ScaleButtonStyle())
         .opacity(appeared ? 1 : 0)
         .animation(.spring(response: 0.5).delay(0.5), value: appeared)
     }

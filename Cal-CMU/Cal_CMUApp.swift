@@ -6,7 +6,7 @@ struct Cal_CMUApp: App {
 
     var body: some Scene {
         WindowGroup {
-            HomeView()
+            MainTabView()
                 .environment(mealStore)
         }
     }

@@ -14,13 +14,13 @@ struct MealCardView: View {
                 } else {
                     ZStack {
                         LinearGradient(
-                            colors: [Color.green.opacity(0.15), Color.green.opacity(0.05)],
+                            colors: meal.mealType.gradient.map { $0.opacity(0.15) },
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
                         Image(systemName: "fork.knife")
                             .font(.system(size: 20))
-                            .foregroundStyle(.green.opacity(0.6))
+                            .foregroundStyle(meal.mealType.color.opacity(0.5))
                     }
                 }
             }
@@ -34,13 +34,26 @@ struct MealCardView: View {
                     .foregroundStyle(.primary)
                     .lineLimit(1)
 
-                HStack(spacing: 12) {
+                HStack(spacing: 8) {
+                    // Meal type badge
+                    HStack(spacing: 3) {
+                        Image(systemName: meal.mealType.icon)
+                            .font(.system(size: 9))
+                        Text(meal.mealType.rawValue)
+                            .font(.system(size: 10, weight: .semibold, design: .rounded))
+                    }
+                    .foregroundStyle(meal.mealType.color)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 3)
+                    .background(meal.mealType.color.opacity(0.1))
+                    .clipShape(Capsule())
+
                     Label("\(meal.calories) cal", systemImage: "flame.fill")
-                        .font(.system(size: 12, weight: .medium, design: .rounded))
+                        .font(.system(size: 11, weight: .medium, design: .rounded))
                         .foregroundStyle(.secondary)
 
                     Text(meal.timeString)
-                        .font(.system(size: 12, weight: .regular, design: .rounded))
+                        .font(.system(size: 11, weight: .regular, design: .rounded))
                         .foregroundStyle(.tertiary)
                 }
             }
