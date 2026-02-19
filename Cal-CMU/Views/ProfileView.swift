@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ProfileView: View {
     @Environment(MealStore.self) private var store
+    @Environment(AuthManager.self) private var authManager
     @State private var showGoalEditor = false
     @State private var showAbout = false
 
@@ -14,6 +15,7 @@ struct ProfileView: View {
                     personalInfoCard
                     settingsCard
                     aboutButton
+                    signOutButton
                     Color.clear.frame(height: 100)
                 }
                 .padding(.horizontal, 20)
@@ -277,9 +279,44 @@ struct ProfileView: View {
         }
         .buttonStyle(ScaleButtonStyle())
     }
+
+    // MARK: - Sign Out
+
+    private var signOutButton: some View {
+        Button {
+            Task {
+                await authManager.signOut()
+            }
+        } label: {
+            HStack {
+                Image(systemName: "rectangle.portrait.and.arrow.right")
+                    .font(.system(size: 14))
+                    .foregroundStyle(.red)
+                    .frame(width: 28, height: 28)
+                    .background(Color.red.opacity(0.1))
+                    .clipShape(RoundedRectangle(cornerRadius: 7))
+
+                Text("Sign Out")
+                    .font(.system(size: 15, weight: .medium, design: .rounded))
+                    .foregroundStyle(.red)
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(Color(.systemGray3))
+            }
+            .padding(18)
+            .background(Color(.secondarySystemGroupedBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 20))
+            .shadow(color: .black.opacity(0.04), radius: 8, x: 0, y: 4)
+        }
+        .buttonStyle(ScaleButtonStyle())
+    }
 }
 
 #Preview {
     ProfileView()
         .environment(MealStore())
+        .environment(AuthManager())
 }
