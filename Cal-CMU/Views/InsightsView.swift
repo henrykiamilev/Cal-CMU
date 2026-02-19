@@ -235,7 +235,9 @@ struct InsightsView: View {
             nutrientDetailRow("Protein", value: "\(Int(store.totalProteinToday))", unit: "g", icon: "circle.hexagongrid.fill", color: .blue)
             nutrientDetailRow("Carbs", value: "\(Int(store.totalCarbsToday))", unit: "g", icon: "bolt.fill", color: .orange)
             nutrientDetailRow("Fat", value: "\(Int(store.totalFatToday))", unit: "g", icon: "drop.triangle.fill", color: .pink)
-            nutrientDetailRow("Water", value: "\(store.waterIntake)", unit: "glasses", icon: "drop.fill", color: .cyan)
+            nutrientDetailRow("Vitamin C", value: "\(Int(store.totalVitaminCToday))", unit: "mg", icon: "pills.fill", color: .yellow)
+            nutrientDetailRow("Iron", value: String(format: "%.1f", store.totalIronToday), unit: "mg", icon: "cross.vial.fill", color: .red)
+            nutrientDetailRow("Calcium", value: "\(Int(store.totalCalciumToday))", unit: "mg", icon: "bone.fill", color: .gray)
         }
         .padding(20)
         .background(.white)

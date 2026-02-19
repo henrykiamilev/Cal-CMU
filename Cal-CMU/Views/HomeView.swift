@@ -14,7 +14,6 @@ struct HomeView: View {
                     StreakBadgeView(streakDays: store.streakDays)
                     calorieCard
                     macroCard
-                    WaterTrackerView()
                     quickAddSection
                     todaysMealsSection
                     Color.clear.frame(height: 100)

@@ -8,7 +8,6 @@ struct GoalSettingView: View {
     @State private var protein: Double = 150
     @State private var carbs: Double = 250
     @State private var fat: Double = 65
-    @State private var water: Double = 8
     @State private var hasInitialized = false
 
     var body: some View {
@@ -59,17 +58,6 @@ struct GoalSettingView: View {
                         unit: "g"
                     )
 
-                    // Water
-                    goalSlider(
-                        title: "Water",
-                        icon: "drop.fill",
-                        color: .cyan,
-                        value: $water,
-                        range: 4...16,
-                        step: 1,
-                        unit: "glasses"
-                    )
-
                     // Calorie breakdown info
                     calorieBreakdown
                 }
@@ -101,7 +89,6 @@ struct GoalSettingView: View {
                     protein = store.dailyProteinGoal
                     carbs = store.dailyCarbsGoal
                     fat = store.dailyFatGoal
-                    water = Double(store.waterGoal)
                     hasInitialized = true
                 }
             }
@@ -206,7 +193,6 @@ struct GoalSettingView: View {
         store.dailyProteinGoal = protein
         store.dailyCarbsGoal = carbs
         store.dailyFatGoal = fat
-        store.waterGoal = Int(water)
     }
 }
 

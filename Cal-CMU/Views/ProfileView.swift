@@ -115,8 +115,6 @@ struct ProfileView: View {
             goalRow(icon: "bolt.fill", color: .orange, label: "Carbs", value: "\(Int(store.dailyCarbsGoal))g")
             Divider()
             goalRow(icon: "drop.triangle.fill", color: .pink, label: "Fat", value: "\(Int(store.dailyFatGoal))g")
-            Divider()
-            goalRow(icon: "drop.fill", color: .cyan, label: "Water", value: "\(store.waterGoal) glasses")
         }
         .padding(18)
         .background(.white)

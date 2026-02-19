@@ -6,7 +6,6 @@ struct CameraView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var showImagePicker = false
     @State private var pickerSource: UIImagePickerController.SourceType = .camera
-    @State private var appeared = false
 
     var body: some View {
         NavigationStack {
@@ -43,9 +42,6 @@ struct CameraView: View {
                                     .font(.system(size: 36, weight: .light))
                                     .foregroundStyle(mealType.color.opacity(0.7))
                             }
-                            .scaleEffect(appeared ? 1 : 0.8)
-                            .opacity(appeared ? 1 : 0)
-                            .animation(.spring(response: 0.5, dampingFraction: 0.7).delay(0.1), value: appeared)
 
                             VStack(spacing: 6) {
                                 Text("Scan your \(mealType.rawValue.lowercased())")
@@ -57,8 +53,6 @@ struct CameraView: View {
                                     .foregroundStyle(.tertiary)
                                     .multilineTextAlignment(.center)
                             }
-                            .opacity(appeared ? 1 : 0)
-                            .animation(.easeOut(duration: 0.4).delay(0.2), value: appeared)
 
                             // Meal type badge
                             HStack(spacing: 6) {
@@ -72,8 +66,6 @@ struct CameraView: View {
                             .padding(.vertical, 8)
                             .background(mealType.color.opacity(0.1))
                             .clipShape(Capsule())
-                            .opacity(appeared ? 1 : 0)
-                            .animation(.easeOut(duration: 0.4).delay(0.3), value: appeared)
                         }
                     }
                     .frame(height: 320)
@@ -152,9 +144,6 @@ struct CameraView: View {
                         .buttonStyle(ScaleButtonStyle())
                     }
                     .padding(.horizontal, 24)
-                    .opacity(appeared ? 1 : 0)
-                    .offset(y: appeared ? 0 : 20)
-                    .animation(.spring(response: 0.5, dampingFraction: 0.8).delay(0.3), value: appeared)
 
                     Spacer()
                         .frame(height: 36)
@@ -187,7 +176,6 @@ struct CameraView: View {
                 }
                 .ignoresSafeArea()
             }
-            .onAppear { appeared = true }
         }
     }
 }

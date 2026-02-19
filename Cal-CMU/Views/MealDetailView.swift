@@ -181,6 +181,38 @@ struct MealDetailView: View {
             nutrientRow(name: "Sugar", value: "\(Int(meal.sugar))g", icon: "cube.fill", color: .purple)
             Divider().padding(.vertical, 10)
             nutrientRow(name: "Sodium", value: "\(Int(meal.sodium))mg", icon: "drop.fill", color: .cyan)
+
+            // Vitamins
+            Text("Vitamins")
+                .font(.system(size: 15, weight: .semibold, design: .rounded))
+                .padding(.top, 16)
+                .padding(.bottom, 6)
+
+            nutrientRow(name: "Vitamin A", value: "\(Int(meal.vitaminA)) mcg", icon: "eye.fill", color: .orange)
+            Divider().padding(.vertical, 10)
+            nutrientRow(name: "Vitamin C", value: "\(Int(meal.vitaminC)) mg", icon: "pills.fill", color: .yellow)
+            Divider().padding(.vertical, 10)
+            nutrientRow(name: "Vitamin D", value: String(format: "%.1f mcg", meal.vitaminD), icon: "sun.max.fill", color: .orange)
+            Divider().padding(.vertical, 10)
+            nutrientRow(name: "Vitamin B6", value: String(format: "%.1f mg", meal.vitaminB6), icon: "bolt.heart.fill", color: .teal)
+            Divider().padding(.vertical, 10)
+            nutrientRow(name: "Vitamin B12", value: String(format: "%.1f mcg", meal.vitaminB12), icon: "heart.fill", color: .red)
+
+            // Minerals
+            Text("Minerals")
+                .font(.system(size: 15, weight: .semibold, design: .rounded))
+                .padding(.top, 16)
+                .padding(.bottom, 6)
+
+            nutrientRow(name: "Potassium", value: "\(Int(meal.potassium)) mg", icon: "battery.75percent", color: .brown)
+            Divider().padding(.vertical, 10)
+            nutrientRow(name: "Iron", value: String(format: "%.1f mg", meal.iron), icon: "cross.vial.fill", color: .red)
+            Divider().padding(.vertical, 10)
+            nutrientRow(name: "Calcium", value: "\(Int(meal.calcium)) mg", icon: "bone.fill", color: .gray)
+            Divider().padding(.vertical, 10)
+            nutrientRow(name: "Magnesium", value: "\(Int(meal.magnesium)) mg", icon: "sparkles", color: .indigo)
+            Divider().padding(.vertical, 10)
+            nutrientRow(name: "Zinc", value: String(format: "%.1f mg", meal.zinc), icon: "shield.fill", color: .mint)
         }
         .padding(20)
         .background(.white)
