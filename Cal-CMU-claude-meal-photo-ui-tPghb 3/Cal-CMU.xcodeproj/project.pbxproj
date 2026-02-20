@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A1B2C3D4E5F6000200000030 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = A1B2C3D4E5F6000100000030 /* Supabase */; };
 		A1B2C3D4E5F6000200000001 /* Cal_CMUApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000001 /* Cal_CMUApp.swift */; };
 		A1B2C3D4E5F6000200000002 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000002 /* HomeView.swift */; };
 		A1B2C3D4E5F6000200000003 /* CalorieRingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000003 /* CalorieRingView.swift */; };
@@ -26,6 +27,11 @@
 		A1B2C3D4E5F6000200000011 /* WeeklyChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000012 /* WeeklyChartView.swift */; };
 		A1B2C3D4E5F6000200000012 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000013 /* ProfileView.swift */; };
 		A1B2C3D4E5F6000200000013 /* GoalSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000014 /* GoalSettingView.swift */; };
+		A1B2C3D4E5F6000200000020 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000020 /* AuthManager.swift */; };
+		A1B2C3D4E5F6000200000021 /* SupabaseConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000021 /* SupabaseConfig.swift */; };
+		A1B2C3D4E5F6000200000022 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000022 /* LoginView.swift */; };
+		A1B2C3D4E5F6000200000023 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000023 /* SignUpView.swift */; };
+		A1B2C3D4E5F6000200000024 /* SupabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000024 /* SupabaseService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +55,11 @@
 		A1B2C3D4E5F6000100000012 /* WeeklyChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyChartView.swift; sourceTree = "<group>"; };
 		A1B2C3D4E5F6000100000013 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		A1B2C3D4E5F6000100000014 /* GoalSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalSettingView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6000100000020 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6000100000021 /* SupabaseConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseConfig.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6000100000022 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6000100000023 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6000100000024 /* SupabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,13 +67,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A1B2C3D4E5F6000200000030 /* Supabase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		A1B2C3D4E5F6000300000001 /* Cal-CMU */ = {
+		A1B2C3D4E5F6000300000001 = {
 			isa = PBXGroup;
 			children = (
 				A1B2C3D4E5F6000300000002 /* Cal-CMU */,
@@ -100,6 +112,8 @@
 				A1B2C3D4E5F6000100000012 /* WeeklyChartView.swift */,
 				A1B2C3D4E5F6000100000013 /* ProfileView.swift */,
 				A1B2C3D4E5F6000100000014 /* GoalSettingView.swift */,
+				A1B2C3D4E5F6000100000022 /* LoginView.swift */,
+				A1B2C3D4E5F6000100000023 /* SignUpView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -108,6 +122,9 @@
 			isa = PBXGroup;
 			children = (
 				A1B2C3D4E5F6000100000009 /* Meal.swift */,
+				A1B2C3D4E5F6000100000020 /* AuthManager.swift */,
+				A1B2C3D4E5F6000100000021 /* SupabaseConfig.swift */,
+				A1B2C3D4E5F6000100000024 /* SupabaseService.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -144,7 +161,10 @@
 			dependencies = (
 			);
 			name = "Cal-CMU";
-				productName = "Cal-CMU";
+			packageProductDependencies = (
+				A1B2C3D4E5F6000100000030 /* Supabase */,
+			);
+			productName = "Cal-CMU";
 			productReference = A1B2C3D4E5F600010000000C /* Cal-CMU.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -171,7 +191,10 @@
 				en,
 				Base,
 			);
-			mainGroup = A1B2C3D4E5F6000300000001 /* Cal-CMU */;
+			mainGroup = A1B2C3D4E5F6000300000001;
+			packageReferences = (
+				EFDBCFFF2F484FC5002989B2 /* XCRemoteSwiftPackageReference "supabase-swift" */,
+			);
 			productRefGroup = A1B2C3D4E5F6000300000005 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -215,6 +238,11 @@
 				A1B2C3D4E5F6000200000012 /* ProfileView.swift in Sources */,
 				A1B2C3D4E5F6000200000013 /* GoalSettingView.swift in Sources */,
 				A1B2C3D4E5F6000200000009 /* Meal.swift in Sources */,
+				A1B2C3D4E5F6000200000020 /* AuthManager.swift in Sources */,
+				A1B2C3D4E5F6000200000021 /* SupabaseConfig.swift in Sources */,
+				A1B2C3D4E5F6000200000022 /* LoginView.swift in Sources */,
+				A1B2C3D4E5F6000200000023 /* SignUpView.swift in Sources */,
+				A1B2C3D4E5F6000200000024 /* SupabaseService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -425,6 +453,24 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		EFDBCFFF2F484FC5002989B2 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase/supabase-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A1B2C3D4E5F6000100000030 /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EFDBCFFF2F484FC5002989B2 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A1B2C3D4E5F6000600000001 /* Project object */;
 }

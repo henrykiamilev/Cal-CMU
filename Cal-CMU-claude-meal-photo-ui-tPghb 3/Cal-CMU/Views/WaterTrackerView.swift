@@ -29,6 +29,7 @@ struct WaterTrackerView: View {
                                     store.waterIntake = index + 1
                                 }
                             }
+                            Task { await store.saveWaterLogManually() }
                         }
                 }
 

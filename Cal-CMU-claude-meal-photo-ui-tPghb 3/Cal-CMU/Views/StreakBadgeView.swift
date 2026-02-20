@@ -51,8 +51,8 @@ struct StreakBadgeView: View {
                 ForEach(0..<7, id: \.self) { day in
                     Circle()
                         .fill(day < streakDays % 7 || streakDays >= 7
-                              ? Color.orange.gradient
-                              : Color(.systemGray5))
+                              ? AnyShapeStyle(Color.orange.gradient)
+                              : AnyShapeStyle(Color(.systemGray5)))
                         .frame(width: 8, height: 8)
                 }
             }

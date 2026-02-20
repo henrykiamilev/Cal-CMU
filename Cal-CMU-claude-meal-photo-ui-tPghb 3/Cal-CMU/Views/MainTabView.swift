@@ -208,4 +208,5 @@ struct MainTabView: View {
 #Preview {
     MainTabView()
         .environment(MealStore())
+        .environment(AuthManager())
 }

@@ -11,6 +11,9 @@ struct HomeView: View {
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 20) {
                     headerSection
+                    if !store.nudges.isEmpty {
+                        nudgeCardsSection
+                    }
                     StreakBadgeView(streakDays: store.streakDays)
                     calorieCard
                     macroCard
@@ -80,17 +83,28 @@ struct HomeView: View {
     private var calorieCard: some View {
         VStack(spacing: 16) {
             HStack {
-                Text("Daily Calories")
-                    .font(.system(size: 17, weight: .semibold, design: .rounded))
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Daily Calories")
+                        .font(.system(size: 17, weight: .semibold, design: .rounded))
+                    if store.useWeekendPlan {
+                        Text(store.activePlanLabel)
+                            .font(.system(size: 11, weight: .medium, design: .rounded))
+                            .foregroundStyle(.green)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 2)
+                            .background(Color.green.opacity(0.1))
+                            .clipShape(Capsule())
+                    }
+                }
                 Spacer()
-                Text("\(store.totalCaloriesToday) / \(store.dailyCalorieGoal)")
+                Text("\(store.totalCaloriesToday) / \(store.activeCalorieGoal)")
                     .font(.system(size: 13, weight: .bold, design: .rounded))
                     .foregroundStyle(.green)
             }
 
             CalorieRingView(
                 consumed: store.totalCaloriesToday,
-                goal: store.dailyCalorieGoal
+                goal: store.activeCalorieGoal
             )
         }
         .frame(maxWidth: .infinity)
@@ -112,15 +126,15 @@ struct HomeView: View {
 
             MacroBarView(
                 label: "Protein", current: store.totalProteinToday,
-                goal: store.dailyProteinGoal, unit: "g", color: .blue
+                goal: store.activeProteinGoal, unit: "g", color: .blue
             )
             MacroBarView(
                 label: "Carbs", current: store.totalCarbsToday,
-                goal: store.dailyCarbsGoal, unit: "g", color: .orange
+                goal: store.activeCarbsGoal, unit: "g", color: .orange
             )
             MacroBarView(
                 label: "Fat", current: store.totalFatToday,
-                goal: store.dailyFatGoal, unit: "g", color: .pink
+                goal: store.activeFatGoal, unit: "g", color: .pink
             )
         }
         .padding(20)
@@ -172,6 +186,42 @@ struct HomeView: View {
         .background(Color(.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 4)
+    }
+
+    // MARK: - Nudge Cards
+
+    private var nudgeCardsSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            ForEach(store.nudges) { nudge in
+                nudgeCard(nudge)
+            }
+        }
+    }
+
+    private func nudgeCard(_ nudge: MealStore.Nudge) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: nudge.icon)
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundStyle(nudge.swiftUIColor)
+                .frame(width: 34, height: 34)
+                .background(nudge.swiftUIColor.opacity(0.12))
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(nudge.title)
+                    .font(.system(size: 14, weight: .semibold, design: .rounded))
+                Text(nudge.message)
+                    .font(.system(size: 12, weight: .medium, design: .rounded))
+                    .foregroundStyle(.secondary)
+                    .lineLimit(2)
+            }
+
+            Spacer()
+        }
+        .padding(14)
+        .background(Color(.secondarySystemGroupedBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .shadow(color: .black.opacity(0.04), radius: 6, x: 0, y: 3)
     }
 
     // MARK: - Today's Meals

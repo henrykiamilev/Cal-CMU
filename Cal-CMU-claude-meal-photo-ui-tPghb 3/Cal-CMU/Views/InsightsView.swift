@@ -11,7 +11,7 @@ struct InsightsView: View {
                     // Weekly chart
                     WeeklyChartView(
                         data: store.weeklyCalories,
-                        goal: store.dailyCalorieGoal
+                        goal: store.activeCalorieGoal
                     )
 
                     // Average stats

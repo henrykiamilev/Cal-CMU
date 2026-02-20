@@ -86,18 +86,19 @@ struct MealCardView: View {
     }
 
     private func macroPill(_ letter: String, value: Int, color: Color) -> some View {
-        HStack(spacing: 2) {
+        HStack(spacing: 3) {
             Text(letter)
-                .font(.system(size: 9, weight: .bold, design: .rounded))
+                .font(.system(size: 10, weight: .bold, design: .rounded))
                 .foregroundStyle(color)
             Text("\(value)g")
-                .font(.system(size: 9, weight: .medium, design: .rounded))
+                .font(.system(size: 10, weight: .semibold, design: .rounded))
                 .foregroundStyle(.secondary)
         }
-        .padding(.horizontal, 6)
-        .padding(.vertical, 2)
+        .padding(.horizontal, 7)
+        .padding(.vertical, 3)
         .background(color.opacity(0.08))
         .clipShape(Capsule())
+        .fixedSize()
     }
 }
 
