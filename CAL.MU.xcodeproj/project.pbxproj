@@ -8,12 +8,26 @@
 
 /* Begin PBXFileReference section */
 		AE1FACF92F47B4300013FA7D /* CAL.MU.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CAL.MU.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AE1FAD1F2F47B4440013FA7D /* Cal-CMU.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "Cal-CMU.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		AE1FAD3A2F47B4640013FA7D /* Exceptions for "Cal-CMU-claude-meal-photo-ui-tPghb 3" folder in "CAL.MU" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Cal-CMU/Info.plist",
+			);
+			target = AE1FACF82F47B4300013FA7D /* CAL.MU */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		AE1FACFB2F47B4300013FA7D /* CAL.MU */ = {
+		AE1FAD202F47B4440013FA7D /* Cal-CMU-claude-meal-photo-ui-tPghb 3 */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = CAL.MU;
+			exceptions = (
+				AE1FAD3A2F47B4640013FA7D /* Exceptions for "Cal-CMU-claude-meal-photo-ui-tPghb 3" folder in "CAL.MU" target */,
+			);
+			path = "Cal-CMU-claude-meal-photo-ui-tPghb 3";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -32,7 +46,7 @@
 		AE1FACF02F47B4300013FA7D = {
 			isa = PBXGroup;
 			children = (
-				AE1FACFB2F47B4300013FA7D /* CAL.MU */,
+				AE1FAD202F47B4440013FA7D /* Cal-CMU-claude-meal-photo-ui-tPghb 3 */,
 				AE1FACFA2F47B4300013FA7D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,6 +55,13 @@
 			isa = PBXGroup;
 			children = (
 				AE1FACF92F47B4300013FA7D /* CAL.MU.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AE1FAD212F47B4440013FA7D /* Products */ = {
+			isa = PBXGroup;
+			children = (
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -61,7 +82,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				AE1FACFB2F47B4300013FA7D /* CAL.MU */,
+				AE1FAD202F47B4440013FA7D /* Cal-CMU-claude-meal-photo-ui-tPghb 3 */,
 			);
 			name = CAL.MU;
 			packageProductDependencies = (
@@ -97,6 +118,12 @@
 			preferredProjectObjectVersion = 77;
 			productRefGroup = AE1FACFA2F47B4300013FA7D /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = AE1FAD212F47B4440013FA7D /* Products */;
+					ProjectRef = AE1FAD1F2F47B4440013FA7D /* Cal-CMU.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				AE1FACF82F47B4300013FA7D /* CAL.MU */,
