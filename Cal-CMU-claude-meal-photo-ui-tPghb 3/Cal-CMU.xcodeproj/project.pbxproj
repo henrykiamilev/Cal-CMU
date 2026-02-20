@@ -32,6 +32,9 @@
 		A1B2C3D4E5F6000200000022 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000022 /* LoginView.swift */; };
 		A1B2C3D4E5F6000200000023 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000023 /* SignUpView.swift */; };
 		A1B2C3D4E5F6000200000024 /* SupabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000024 /* SupabaseService.swift */; };
+		A1B2C3D4E5F6000200000025 /* FlatDesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000025 /* FlatDesignSystem.swift */; };
+		A1B2C3D4E5F6000200000026 /* RestaurantPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000026 /* RestaurantPickerView.swift */; };
+		A1B2C3D4E5F6000200000027 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000027 /* OnboardingView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,6 +63,9 @@
 		A1B2C3D4E5F6000100000022 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		A1B2C3D4E5F6000100000023 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		A1B2C3D4E5F6000100000024 /* SupabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseService.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6000100000025 /* FlatDesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlatDesignSystem.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6000100000026 /* RestaurantPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantPickerView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6000100000027 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +92,7 @@
 			isa = PBXGroup;
 			children = (
 				A1B2C3D4E5F6000100000001 /* Cal_CMUApp.swift */,
+				A1B2C3D4E5F6000100000025 /* FlatDesignSystem.swift */,
 				A1B2C3D4E5F6000300000003 /* Views */,
 				A1B2C3D4E5F6000300000004 /* Models */,
 				A1B2C3D4E5F600010000000A /* Assets.xcassets */,
@@ -114,6 +121,8 @@
 				A1B2C3D4E5F6000100000014 /* GoalSettingView.swift */,
 				A1B2C3D4E5F6000100000022 /* LoginView.swift */,
 				A1B2C3D4E5F6000100000023 /* SignUpView.swift */,
+				A1B2C3D4E5F6000100000026 /* RestaurantPickerView.swift */,
+				A1B2C3D4E5F6000100000027 /* OnboardingView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -243,6 +252,9 @@
 				A1B2C3D4E5F6000200000022 /* LoginView.swift in Sources */,
 				A1B2C3D4E5F6000200000023 /* SignUpView.swift in Sources */,
 				A1B2C3D4E5F6000200000024 /* SupabaseService.swift in Sources */,
+				A1B2C3D4E5F6000200000025 /* FlatDesignSystem.swift in Sources */,
+				A1B2C3D4E5F6000200000026 /* RestaurantPickerView.swift in Sources */,
+				A1B2C3D4E5F6000200000027 /* OnboardingView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -5,7 +5,6 @@ struct MealCardView: View {
 
     var body: some View {
         HStack(spacing: 14) {
-            // Meal image or placeholder
             Group {
                 if let image = meal.image {
                     Image(uiImage: image)
@@ -13,91 +12,64 @@ struct MealCardView: View {
                         .aspectRatio(contentMode: .fill)
                 } else {
                     ZStack {
-                        LinearGradient(
-                            colors: meal.mealType.gradient.map { $0.opacity(0.15) },
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
+                        Rectangle()
+                            .fill(meal.mealType.flatColor.opacity(0.12))
                         Image(systemName: "fork.knife")
-                            .font(.system(size: 20))
-                            .foregroundStyle(meal.mealType.color.opacity(0.5))
+                            .font(.system(size: 20, weight: .medium))
+                            .foregroundStyle(meal.mealType.flatColor.opacity(0.5))
                     }
                 }
             }
             .frame(width: 60, height: 60)
-            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .clipShape(RoundedRectangle(cornerRadius: 10))
 
-            // Meal info
             VStack(alignment: .leading, spacing: 4) {
                 Text(meal.name)
-                    .font(.system(size: 15, weight: .semibold, design: .rounded))
-                    .foregroundStyle(.primary)
+                    .font(FlatFont.body(15))
+                    .fontWeight(.semibold)
+                    .foregroundStyle(FlatColors.textPrimary)
                     .lineLimit(1)
 
                 HStack(spacing: 6) {
-                    // Meal type badge
-                    HStack(spacing: 3) {
-                        Image(systemName: meal.mealType.icon)
-                            .font(.system(size: 9))
-                        Text(meal.mealType.rawValue)
-                            .font(.system(size: 10, weight: .semibold, design: .rounded))
-                    }
-                    .foregroundStyle(meal.mealType.color)
-                    .padding(.horizontal, 6)
-                    .padding(.vertical, 3)
-                    .background(meal.mealType.color.opacity(0.1))
-                    .clipShape(Capsule())
-                    .fixedSize()
+                    FlatBadge(text: meal.mealType.rawValue, color: meal.mealType.flatColor, icon: meal.mealType.icon)
+                    FlatBadge(text: meal.scanSource == .photo ? "Photo" : "Receipt", color: meal.scanSource.flatColor, icon: meal.scanSource.icon)
 
-                    // Scan source badge
                     HStack(spacing: 3) {
-                        Image(systemName: meal.scanSource.icon)
-                            .font(.system(size: 8))
-                        Text(meal.scanSource == .photo ? "Photo" : "Receipt")
-                            .font(.system(size: 10, weight: .semibold, design: .rounded))
+                        Image(systemName: "flame.fill")
+                            .font(.system(size: 10))
+                        Text("\(meal.calories) cal")
+                            .font(FlatFont.caption())
                     }
-                    .foregroundStyle(meal.scanSource.color)
-                    .padding(.horizontal, 6)
-                    .padding(.vertical, 3)
-                    .background(meal.scanSource.color.opacity(0.1))
-                    .clipShape(Capsule())
+                    .foregroundStyle(FlatColors.textSecondary)
                     .fixedSize()
-
-                    Label("\(meal.calories) cal", systemImage: "flame.fill")
-                        .font(.system(size: 11, weight: .medium, design: .rounded))
-                        .foregroundStyle(.secondary)
-                        .fixedSize()
                 }
             }
 
             Spacer()
 
-            // Macro mini pills
             VStack(alignment: .trailing, spacing: 4) {
-                macroPill("P", value: Int(meal.protein), color: .blue)
-                macroPill("C", value: Int(meal.carbs), color: .orange)
-                macroPill("F", value: Int(meal.fat), color: .pink)
+                macroPill("P", value: Int(meal.protein), color: FlatColors.ocean)
+                macroPill("C", value: Int(meal.carbs), color: FlatColors.tangerine)
+                macroPill("F", value: Int(meal.fat), color: FlatColors.rose)
             }
         }
-        .padding(14)
-        .background(Color(.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 4)
+        .flatCard(cornerRadius: 12, padding: 14)
     }
 
     private func macroPill(_ letter: String, value: Int, color: Color) -> some View {
         HStack(spacing: 3) {
             Text(letter)
-                .font(.system(size: 10, weight: .bold, design: .rounded))
+                .font(FlatFont.caption(10))
+                .fontWeight(.bold)
                 .foregroundStyle(color)
             Text("\(value)g")
-                .font(.system(size: 10, weight: .semibold, design: .rounded))
-                .foregroundStyle(.secondary)
+                .font(FlatFont.caption(10))
+                .foregroundStyle(FlatColors.textSecondary)
         }
         .padding(.horizontal, 7)
         .padding(.vertical, 3)
         .background(color.opacity(0.08))
-        .clipShape(Capsule())
+        .clipShape(RoundedRectangle(cornerRadius: 6))
         .fixedSize()
     }
 }
@@ -105,5 +77,5 @@ struct MealCardView: View {
 #Preview {
     MealCardView(meal: Meal.sampleMeals[0])
         .padding()
-        .background(Color(.systemGroupedBackground))
+        .background(FlatColors.background)
 }

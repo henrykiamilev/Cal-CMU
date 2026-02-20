@@ -59,6 +59,7 @@ struct UserProfileRow: Codable, Sendable {
     var userAge: Int
     var userWeight: Double
     var userHeight: Double
+    var userGender: String?
     var dailyCalorieGoal: Int
     var dailyProteinGoal: Double
     var dailyCarbsGoal: Double
@@ -66,6 +67,7 @@ struct UserProfileRow: Codable, Sendable {
     var streakDays: Int
     var showNotifications: Bool
     var useDarkMode: Bool
+    var hasCompletedOnboarding: Bool?
     // Weekend plan
     var useWeekendPlan: Bool
     var weekendCalorieGoal: Int
@@ -86,6 +88,7 @@ struct UserProfileRow: Codable, Sendable {
         case userAge = "user_age"
         case userWeight = "user_weight"
         case userHeight = "user_height"
+        case userGender = "user_gender"
         case dailyCalorieGoal = "daily_calorie_goal"
         case dailyProteinGoal = "daily_protein_goal"
         case dailyCarbsGoal = "daily_carbs_goal"
@@ -93,6 +96,7 @@ struct UserProfileRow: Codable, Sendable {
         case streakDays = "streak_days"
         case showNotifications = "show_notifications"
         case useDarkMode = "use_dark_mode"
+        case hasCompletedOnboarding = "has_completed_onboarding"
         case useWeekendPlan = "use_weekend_plan"
         case weekendCalorieGoal = "weekend_calorie_goal"
         case weekendProteinGoal = "weekend_protein_goal"
@@ -111,6 +115,7 @@ struct UserProfileUpdate: Codable, Sendable {
     var userAge: Int?
     var userWeight: Double?
     var userHeight: Double?
+    var userGender: String?
     var dailyCalorieGoal: Int?
     var dailyProteinGoal: Double?
     var dailyCarbsGoal: Double?
@@ -118,6 +123,7 @@ struct UserProfileUpdate: Codable, Sendable {
     var streakDays: Int?
     var showNotifications: Bool?
     var useDarkMode: Bool?
+    var hasCompletedOnboarding: Bool?
     // Weekend plan
     var useWeekendPlan: Bool?
     var weekendCalorieGoal: Int?
@@ -137,6 +143,7 @@ struct UserProfileUpdate: Codable, Sendable {
         case userAge = "user_age"
         case userWeight = "user_weight"
         case userHeight = "user_height"
+        case userGender = "user_gender"
         case dailyCalorieGoal = "daily_calorie_goal"
         case dailyProteinGoal = "daily_protein_goal"
         case dailyCarbsGoal = "daily_carbs_goal"
@@ -144,6 +151,7 @@ struct UserProfileUpdate: Codable, Sendable {
         case streakDays = "streak_days"
         case showNotifications = "show_notifications"
         case useDarkMode = "use_dark_mode"
+        case hasCompletedOnboarding = "has_completed_onboarding"
         case useWeekendPlan = "use_weekend_plan"
         case weekendCalorieGoal = "weekend_calorie_goal"
         case weekendProteinGoal = "weekend_protein_goal"
@@ -263,6 +271,69 @@ struct WeightLogInsert: Codable, Sendable {
         case userId = "user_id"
         case date
         case weight
+    }
+}
+
+// MARK: - Restaurant Menu Item DTO
+
+struct RestaurantMenuItemRow: Codable, Sendable, Identifiable {
+    let id: UUID
+    let restaurant: String
+    let itemName: String
+    let category: String
+    let calories: Int
+    let caloriesFromFat: Int
+    let totalFatG: Double
+    let satFatG: Double
+    let transFatG: Double
+    let cholesterolMg: Double
+    let sodiumMg: Double
+    let carbsG: Double
+    let fiberG: Double
+    let sugarsG: Double
+    let proteinG: Double
+    let vitaminAPct: Int
+    let vitaminCPct: Int
+    let calciumPct: Int
+    let ironPct: Int
+
+    enum CodingKeys: String, CodingKey {
+        case id, restaurant, category, calories
+        case itemName = "item_name"
+        case caloriesFromFat = "calories_from_fat"
+        case totalFatG = "total_fat_g"
+        case satFatG = "sat_fat_g"
+        case transFatG = "trans_fat_g"
+        case cholesterolMg = "cholesterol_mg"
+        case sodiumMg = "sodium_mg"
+        case carbsG = "carbs_g"
+        case fiberG = "fiber_g"
+        case sugarsG = "sugars_g"
+        case proteinG = "protein_g"
+        case vitaminAPct = "vitamin_a_pct"
+        case vitaminCPct = "vitamin_c_pct"
+        case calciumPct = "calcium_pct"
+        case ironPct = "iron_pct"
+    }
+
+    /// Convert to a Meal for display / saving
+    func toMeal(mealType: MealType) -> Meal {
+        Meal(
+            name: itemName,
+            mealType: mealType,
+            scanSource: .receipt,
+            calories: calories,
+            protein: proteinG,
+            carbs: carbsG,
+            fat: totalFatG,
+            fiber: fiberG,
+            sugar: sugarsG,
+            sodium: sodiumMg,
+            vitaminC: Double(vitaminCPct),
+            iron: Double(ironPct),
+            calcium: Double(calciumPct),
+            restaurantName: restaurant
+        )
     }
 }
 
@@ -416,6 +487,40 @@ actor SupabaseService {
             .delete()
             .eq("id", value: id.uuidString)
             .execute()
+    }
+
+    // MARK: - Restaurant Menu Items
+
+    func fetchRestaurants() async throws -> [String] {
+        let items: [RestaurantMenuItemRow] = try await client
+            .from("restaurant_menu_items")
+            .select()
+            .execute()
+            .value
+
+        let unique = Set(items.map(\.restaurant))
+        return Array(unique).sorted()
+    }
+
+    func fetchMenuItems(restaurant: String) async throws -> [RestaurantMenuItemRow] {
+        try await client
+            .from("restaurant_menu_items")
+            .select()
+            .eq("restaurant", value: restaurant)
+            .order("category")
+            .order("item_name")
+            .execute()
+            .value
+    }
+
+    func fetchAllMenuItems() async throws -> [RestaurantMenuItemRow] {
+        try await client
+            .from("restaurant_menu_items")
+            .select()
+            .order("restaurant")
+            .order("item_name")
+            .execute()
+            .value
     }
 
     // MARK: - Helpers

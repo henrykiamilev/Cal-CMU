@@ -11,74 +11,74 @@ struct SignUpView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color(.systemGroupedBackground)
+                FlatColors.background
                     .ignoresSafeArea()
 
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 24) {
                         Spacer().frame(height: 20)
 
-                        // Header
                         VStack(spacing: 8) {
                             Text("Create Account")
-                                .font(.system(size: 26, weight: .bold, design: .rounded))
+                                .font(FlatFont.title(26))
+                                .foregroundStyle(FlatColors.textPrimary)
 
                             Text("Start tracking your nutrition today")
-                                .font(.system(size: 15, weight: .medium, design: .rounded))
-                                .foregroundStyle(.secondary)
+                                .font(FlatFont.body(15))
+                                .foregroundStyle(FlatColors.textSecondary)
                         }
 
-                        // Form Card
                         VStack(spacing: 16) {
                             VStack(alignment: .leading, spacing: 6) {
                                 Text("Email")
-                                    .font(.system(size: 13, weight: .semibold, design: .rounded))
-                                    .foregroundStyle(.secondary)
+                                    .font(FlatFont.label(13))
+                                    .foregroundStyle(FlatColors.textSecondary)
 
                                 TextField("you@example.com", text: $email)
                                     .textContentType(.emailAddress)
                                     .textInputAutocapitalization(.never)
                                     .autocorrectionDisabled()
                                     .keyboardType(.emailAddress)
+                                    .font(FlatFont.body(16))
                                     .padding(14)
-                                    .background(Color(.systemGray6))
-                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                                    .background(FlatColors.inputBg)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
                             }
 
                             VStack(alignment: .leading, spacing: 6) {
                                 Text("Password")
-                                    .font(.system(size: 13, weight: .semibold, design: .rounded))
-                                    .foregroundStyle(.secondary)
+                                    .font(FlatFont.label(13))
+                                    .foregroundStyle(FlatColors.textSecondary)
 
                                 SecureField("At least 6 characters", text: $password)
                                     .textContentType(.newPassword)
+                                    .font(FlatFont.body(16))
                                     .padding(14)
-                                    .background(Color(.systemGray6))
-                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                                    .background(FlatColors.inputBg)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
                             }
 
                             VStack(alignment: .leading, spacing: 6) {
                                 Text("Confirm Password")
-                                    .font(.system(size: 13, weight: .semibold, design: .rounded))
-                                    .foregroundStyle(.secondary)
+                                    .font(FlatFont.label(13))
+                                    .foregroundStyle(FlatColors.textSecondary)
 
                                 SecureField("Re-enter password", text: $confirmPassword)
                                     .textContentType(.newPassword)
+                                    .font(FlatFont.body(16))
                                     .padding(14)
-                                    .background(Color(.systemGray6))
-                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                                    .background(FlatColors.inputBg)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
                             }
 
-                            // Error message
                             if let error = localError ?? auth.errorMessage {
                                 Text(error)
-                                    .font(.system(size: 13, weight: .medium, design: .rounded))
-                                    .foregroundStyle(.red)
+                                    .font(FlatFont.caption(13))
+                                    .foregroundStyle(FlatColors.coral)
                                     .multilineTextAlignment(.center)
                                     .padding(.top, 4)
                             }
 
-                            // Sign Up Button
                             Button {
                                 attemptSignUp()
                             } label: {
@@ -88,28 +88,18 @@ struct SignUpView: View {
                                             .tint(.white)
                                     }
                                     Text("Create Account")
-                                        .font(.system(size: 16, weight: .bold, design: .rounded))
+                                        .font(FlatFont.heading(16))
                                 }
                                 .foregroundStyle(.white)
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 16)
-                                .background(
-                                    LinearGradient(
-                                        colors: [.green, .green.opacity(0.8)],
-                                        startPoint: .leading,
-                                        endPoint: .trailing
-                                    )
-                                )
-                                .clipShape(RoundedRectangle(cornerRadius: 14))
-                                .shadow(color: .green.opacity(0.3), radius: 8, x: 0, y: 4)
+                                .background(FlatColors.primary)
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
                             }
                             .disabled(auth.isLoading)
                             .padding(.top, 8)
                         }
-                        .padding(20)
-                        .background(Color(.secondarySystemGroupedBackground))
-                        .clipShape(RoundedRectangle(cornerRadius: 24))
-                        .shadow(color: .black.opacity(0.05), radius: 12, x: 0, y: 6)
+                        .flatCard(cornerRadius: 16, padding: 20)
 
                         Spacer()
                     }
@@ -120,7 +110,8 @@ struct SignUpView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
-                        .font(.system(size: 15, weight: .medium, design: .rounded))
+                        .font(FlatFont.body(15))
+                        .foregroundStyle(FlatColors.textSecondary)
                 }
             }
         }

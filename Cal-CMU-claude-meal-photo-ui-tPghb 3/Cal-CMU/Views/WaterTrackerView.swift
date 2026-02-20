@@ -2,111 +2,149 @@ import SwiftUI
 
 struct WaterTrackerView: View {
     @Environment(MealStore.self) private var store
+    @State private var showCustomInput = false
+    @State private var customValue: String = ""
+    @FocusState private var isInputFocused: Bool
+
+    private let quickAmounts = [1, 2, 4]
 
     var body: some View {
-        VStack(spacing: 14) {
-            HStack {
-                Image(systemName: "drop.fill")
-                    .foregroundStyle(.cyan)
-                    .font(.system(size: 16))
-                Text("Water Intake")
-                    .font(.system(size: 17, weight: .semibold, design: .rounded))
+        VStack(spacing: 16) {
+            // Header
+            HStack(alignment: .top) {
+                FlatIconCircle(icon: "drop.fill", color: FlatColors.sky, size: 28)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Water Intake")
+                        .font(FlatFont.heading(16))
+                        .foregroundStyle(FlatColors.textPrimary)
+                    Text("glasses (8 oz each)")
+                        .font(FlatFont.caption(12))
+                        .foregroundStyle(FlatColors.textTertiary)
+                }
                 Spacer()
-                Text("\(store.waterIntake) / \(store.waterGoal)")
-                    .font(.system(size: 14, weight: .bold, design: .rounded))
-                    .foregroundStyle(.cyan)
             }
 
-            // Water glasses
-            HStack(spacing: 6) {
-                ForEach(0..<store.waterGoal, id: \.self) { index in
-                    WaterGlass(filled: index < store.waterIntake)
+            // Large number display
+            HStack(alignment: .firstTextBaseline, spacing: 4) {
+                if showCustomInput {
+                    TextField("0", text: $customValue)
+                        .font(FlatFont.title(32))
+                        .foregroundStyle(FlatColors.sky)
+                        .keyboardType(.numberPad)
+                        .multilineTextAlignment(.center)
+                        .frame(width: 60)
+                        .focused($isInputFocused)
+                        .onSubmit { commitCustomValue() }
+                        .onChange(of: isInputFocused) { _, focused in
+                            if !focused { commitCustomValue() }
+                        }
+                } else {
+                    Text("\(store.waterIntake)")
+                        .font(FlatFont.title(32))
+                        .foregroundStyle(FlatColors.sky)
                         .onTapGesture {
-                            withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
-                                if index < store.waterIntake {
-                                    store.waterIntake = index
-                                } else {
-                                    store.waterIntake = index + 1
-                                }
-                            }
-                            Task { await store.saveWaterLogManually() }
+                            customValue = "\(store.waterIntake)"
+                            showCustomInput = true
+                            isInputFocused = true
                         }
                 }
 
+                Text("/ \(store.waterGoal)")
+                    .font(FlatFont.body(18))
+                    .foregroundStyle(FlatColors.textTertiary)
+
                 Spacer()
 
-                // Plus / Minus buttons
-                HStack(spacing: 8) {
-                    Button {
-                        store.removeWater()
-                    } label: {
-                        Image(systemName: "minus")
-                            .font(.system(size: 12, weight: .bold))
-                            .foregroundStyle(.secondary)
-                            .frame(width: 28, height: 28)
-                            .background(Color(.systemGray5))
-                            .clipShape(Circle())
-                    }
-
-                    Button {
-                        store.addWater()
-                    } label: {
-                        Image(systemName: "plus")
-                            .font(.system(size: 12, weight: .bold))
-                            .foregroundStyle(.white)
-                            .frame(width: 28, height: 28)
-                            .background(Color.cyan.gradient)
-                            .clipShape(Circle())
-                    }
+                // Approximate oz display
+                VStack(alignment: .trailing, spacing: 2) {
+                    Text("≈ \(store.waterIntake * 8) oz")
+                        .font(FlatFont.mono(14))
+                        .foregroundStyle(FlatColors.textSecondary)
+                    Text("of \(store.waterGoal * 8) oz goal")
+                        .font(FlatFont.caption(11))
+                        .foregroundStyle(FlatColors.textTertiary)
                 }
             }
 
             // Progress bar
-            GeometryReader { geo in
-                ZStack(alignment: .leading) {
-                    Capsule()
-                        .fill(Color.cyan.opacity(0.12))
-                        .frame(height: 6)
+            FlatProgressBar(
+                progress: Double(store.waterIntake) / Double(max(store.waterGoal, 1)),
+                color: FlatColors.sky,
+                height: 8
+            )
 
-                    Capsule()
-                        .fill(Color.cyan.gradient)
-                        .frame(
-                            width: geo.size.width * min(Double(store.waterIntake) / Double(store.waterGoal), 1.0),
-                            height: 6
-                        )
-                        .animation(.spring(response: 0.4), value: store.waterIntake)
+            FlatDivider()
+
+            // Quick-add buttons
+            HStack(spacing: 10) {
+                // Minus button
+                Button {
+                    store.removeWater()
+                } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: "minus")
+                            .font(.system(size: 13, weight: .semibold))
+                        Text("1")
+                            .font(FlatFont.label(13))
+                    }
+                    .foregroundStyle(FlatColors.textSecondary)
+                    .frame(height: 36)
+                    .frame(maxWidth: .infinity)
+                    .background(FlatColors.inputBg)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                }
+
+                // Quick-add amounts
+                ForEach(quickAmounts, id: \.self) { amount in
+                    Button {
+                        addGlasses(amount)
+                    } label: {
+                        HStack(spacing: 3) {
+                            Image(systemName: "plus")
+                                .font(.system(size: 11, weight: .semibold))
+                            Text("\(amount)")
+                                .font(FlatFont.label(13))
+                        }
+                        .foregroundStyle(.white)
+                        .frame(height: 36)
+                        .frame(maxWidth: .infinity)
+                        .background(amount == 1 ? FlatColors.sky : FlatColors.sky.opacity(0.8))
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                    }
                 }
             }
-            .frame(height: 6)
+
+            // Tap-to-edit hint
+            if !showCustomInput {
+                Text("Tap the number to type a custom value")
+                    .font(FlatFont.caption(11))
+                    .foregroundStyle(FlatColors.textTertiary)
+            }
         }
-        .padding(18)
-        .background(Color(.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 20))
-        .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 4)
+        .flatCard(cornerRadius: 12, padding: 18)
     }
-}
 
-struct WaterGlass: View {
-    let filled: Bool
-
-    var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 6)
-                .fill(filled ? Color.cyan.opacity(0.2) : Color(.systemGray6))
-                .frame(width: 26, height: 32)
-
-            Image(systemName: filled ? "drop.fill" : "drop")
-                .font(.system(size: 12))
-                .foregroundStyle(filled ? .cyan : Color(.systemGray4))
+    private func addGlasses(_ count: Int) {
+        withAnimation(.easeOut(duration: 0.2)) {
+            store.waterIntake = min(store.waterIntake + count, 99)
         }
-        .scaleEffect(filled ? 1.0 : 0.9)
-        .animation(.spring(response: 0.3, dampingFraction: 0.6), value: filled)
+        Task { await store.saveWaterLogManually() }
+    }
+
+    private func commitCustomValue() {
+        showCustomInput = false
+        guard let value = Int(customValue) else { return }
+        let clamped = max(0, min(value, 99))
+        withAnimation(.easeOut(duration: 0.2)) {
+            store.waterIntake = clamped
+        }
+        Task { await store.saveWaterLogManually() }
     }
 }
 
 #Preview {
     WaterTrackerView()
         .padding()
-        .background(Color(.systemGroupedBackground))
+        .background(FlatColors.background)
         .environment(MealStore())
 }

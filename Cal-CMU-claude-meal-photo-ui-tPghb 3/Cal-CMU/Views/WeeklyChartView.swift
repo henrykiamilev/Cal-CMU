@@ -13,74 +13,66 @@ struct WeeklyChartView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            // Header
             HStack {
                 Text("Weekly Calories")
-                    .font(.system(size: 17, weight: .semibold, design: .rounded))
+                    .font(FlatFont.heading(16))
+                    .foregroundStyle(FlatColors.textPrimary)
                 Spacer()
                 if let selected = selectedBar, selected < data.count {
                     Text("\(data[selected].day): \(data[selected].calories) cal")
-                        .font(.system(size: 13, weight: .bold, design: .rounded))
-                        .foregroundStyle(.green)
+                        .font(FlatFont.label(13))
+                        .fontWeight(.bold)
+                        .foregroundStyle(FlatColors.primary)
                         .transition(.opacity)
                 }
             }
 
-            // Chart
             HStack(alignment: .bottom, spacing: 8) {
                 ForEach(Array(data.enumerated()), id: \.offset) { index, item in
                     VStack(spacing: 6) {
-                        // Bar
                         ZStack(alignment: .bottom) {
-                            // Goal line indicator
                             RoundedRectangle(cornerRadius: 6)
-                                .fill(Color(.systemGray5))
+                                .fill(FlatColors.divider)
                                 .frame(height: 120)
 
                             RoundedRectangle(cornerRadius: 6)
                                 .fill(barColor(for: item.calories))
                                 .frame(height: animateChart ? barHeight(item.calories) : 0)
                                 .animation(
-                                    .spring(response: 0.6, dampingFraction: 0.7).delay(Double(index) * 0.08),
+                                    .easeOut(duration: 0.5).delay(Double(index) * 0.08),
                                     value: animateChart
                                 )
                         }
                         .frame(height: 120)
                         .onTapGesture {
-                            withAnimation(.spring(response: 0.2)) {
+                            withAnimation(.easeOut(duration: 0.2)) {
                                 selectedBar = selectedBar == index ? nil : index
                             }
                         }
-                        .scaleEffect(selectedBar == index ? 1.08 : 1.0)
-                        .animation(.spring(response: 0.2), value: selectedBar)
 
-                        // Day label
                         Text(item.day)
-                            .font(.system(size: 11, weight: index == currentDayIndex ? .bold : .medium, design: .rounded))
-                            .foregroundStyle(index == currentDayIndex ? .green : .secondary)
+                            .font(FlatFont.caption(11))
+                            .fontWeight(index == currentDayIndex ? .bold : .medium)
+                            .foregroundStyle(index == currentDayIndex ? FlatColors.primary : FlatColors.textSecondary)
                     }
                     .frame(maxWidth: .infinity)
                 }
             }
 
-            // Goal line label
             HStack {
                 Rectangle()
-                    .fill(Color(.systemGray3))
+                    .fill(FlatColors.divider)
                     .frame(height: 1)
                     .frame(maxWidth: 40)
 
                 Text("Goal: \(goal) cal")
-                    .font(.system(size: 11, weight: .medium, design: .rounded))
-                    .foregroundStyle(.tertiary)
+                    .font(FlatFont.caption())
+                    .foregroundStyle(FlatColors.textTertiary)
 
                 Spacer()
             }
         }
-        .padding(20)
-        .background(Color(.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 20))
-        .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 4)
+        .flatCard(cornerRadius: 12, padding: 20)
         .onAppear { animateChart = true }
     }
 
@@ -89,14 +81,10 @@ struct WeeklyChartView: View {
         return max(CGFloat(calories) / CGFloat(maxValue) * 120, 4)
     }
 
-    private func barColor(for calories: Int) -> LinearGradient {
-        if calories == 0 {
-            return LinearGradient(colors: [Color(.systemGray5)], startPoint: .bottom, endPoint: .top)
-        } else if calories > goal {
-            return LinearGradient(colors: [.red.opacity(0.6), .red], startPoint: .bottom, endPoint: .top)
-        } else {
-            return LinearGradient(colors: [.green.opacity(0.6), .green], startPoint: .bottom, endPoint: .top)
-        }
+    private func barColor(for calories: Int) -> Color {
+        if calories == 0 { return FlatColors.divider }
+        if calories > goal { return FlatColors.coral }
+        return FlatColors.primary
     }
 
     private var currentDayIndex: Int {
@@ -111,5 +99,5 @@ struct WeeklyChartView: View {
         goal: 2000
     )
     .padding()
-    .background(Color(.systemGroupedBackground))
+    .background(FlatColors.background)
 }

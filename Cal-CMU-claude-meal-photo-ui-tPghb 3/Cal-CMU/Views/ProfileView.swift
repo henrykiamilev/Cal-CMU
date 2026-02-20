@@ -23,7 +23,7 @@ struct ProfileView: View {
                 .padding(.horizontal, 20)
                 .padding(.top, 8)
             }
-            .background(Color(.systemGroupedBackground))
+            .background(FlatColors.background)
             .navigationTitle("Profile")
             .navigationBarTitleDisplayMode(.large)
             .sheet(isPresented: $showGoalEditor) {
@@ -44,27 +44,19 @@ struct ProfileView: View {
 
     private var profileHeader: some View {
         VStack(spacing: 14) {
-            ZStack {
-                Circle()
-                    .fill(
-                        LinearGradient(
-                            colors: [.green.opacity(0.5), .green],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .frame(width: 80, height: 80)
-                    .shadow(color: .green.opacity(0.3), radius: 12, x: 0, y: 6)
-
-                Text(String(store.userName.prefix(1)).uppercased())
-                    .font(.system(size: 32, weight: .bold, design: .rounded))
-                    .foregroundStyle(.white)
-            }
+            RoundedRectangle(cornerRadius: 20)
+                .fill(FlatColors.primary)
+                .frame(width: 80, height: 80)
+                .overlay(
+                    Text(String(store.userName.prefix(1)).uppercased())
+                        .font(FlatFont.title(32))
+                        .foregroundStyle(.white)
+                )
 
             Text(store.userName)
-                .font(.system(size: 22, weight: .bold, design: .rounded))
+                .font(FlatFont.title(22))
+                .foregroundStyle(FlatColors.textPrimary)
 
-            // Stats row
             HStack(spacing: 24) {
                 statItem(value: "\(store.streakDays)", label: "Day Streak")
                 statDivider
@@ -75,26 +67,23 @@ struct ProfileView: View {
             .padding(.vertical, 12)
         }
         .frame(maxWidth: .infinity)
-        .padding(20)
-        .background(Color(.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 24))
-        .shadow(color: .black.opacity(0.05), radius: 12, x: 0, y: 6)
+        .flatCard(cornerRadius: 16, padding: 20)
     }
 
     private func statItem(value: String, label: String) -> some View {
         VStack(spacing: 4) {
             Text(value)
-                .font(.system(size: 18, weight: .bold, design: .rounded))
-                .foregroundStyle(.green)
+                .font(FlatFont.heading(18))
+                .foregroundStyle(FlatColors.primary)
             Text(label)
-                .font(.system(size: 11, weight: .medium, design: .rounded))
-                .foregroundStyle(.secondary)
+                .font(FlatFont.caption(11))
+                .foregroundStyle(FlatColors.textSecondary)
         }
     }
 
     private var statDivider: some View {
         Rectangle()
-            .fill(Color(.systemGray4))
+            .fill(FlatColors.divider)
             .frame(width: 1, height: 32)
     }
 
@@ -104,70 +93,64 @@ struct ProfileView: View {
         VStack(alignment: .leading, spacing: 14) {
             HStack {
                 Text("Daily Goals")
-                    .font(.system(size: 17, weight: .semibold, design: .rounded))
+                    .font(FlatFont.heading(17))
+                    .foregroundStyle(FlatColors.textPrimary)
                 Spacer()
                 Button {
                     showGoalEditor = true
                 } label: {
                     Text("Edit")
-                        .font(.system(size: 14, weight: .semibold, design: .rounded))
-                        .foregroundStyle(.green)
+                        .font(FlatFont.label(14))
+                        .foregroundStyle(FlatColors.primary)
                 }
             }
 
             if store.useWeekendPlan {
                 HStack {
                     Text(store.activePlanLabel)
-                        .font(.system(size: 11, weight: .medium, design: .rounded))
-                        .foregroundStyle(.green)
+                        .font(FlatFont.caption(11))
+                        .foregroundStyle(FlatColors.primary)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 2)
-                        .background(Color.green.opacity(0.1))
-                        .clipShape(Capsule())
+                        .background(FlatColors.primary.opacity(0.1))
+                        .clipShape(RoundedRectangle(cornerRadius: 6))
                     Spacer()
                 }
             }
 
-            goalRow(icon: "flame.fill", color: .orange, label: "Calories", value: "\(store.activeCalorieGoal) cal")
-            Divider()
-            goalRow(icon: "circle.hexagongrid.fill", color: .blue, label: "Protein", value: "\(Int(store.activeProteinGoal))g")
-            Divider()
-            goalRow(icon: "bolt.fill", color: .orange, label: "Carbs", value: "\(Int(store.activeCarbsGoal))g")
-            Divider()
-            goalRow(icon: "drop.triangle.fill", color: .pink, label: "Fat", value: "\(Int(store.activeFatGoal))g")
+            goalRow(icon: "flame.fill", color: FlatColors.tangerine, label: "Calories", value: "\(store.activeCalorieGoal) cal")
+            FlatDivider()
+            goalRow(icon: "circle.hexagongrid.fill", color: FlatColors.ocean, label: "Protein", value: "\(Int(store.activeProteinGoal))g")
+            FlatDivider()
+            goalRow(icon: "bolt.fill", color: FlatColors.sunflower, label: "Carbs", value: "\(Int(store.activeCarbsGoal))g")
+            FlatDivider()
+            goalRow(icon: "drop.triangle.fill", color: FlatColors.rose, label: "Fat", value: "\(Int(store.activeFatGoal))g")
 
             if let target = store.targetWeight {
-                Divider()
+                FlatDivider()
                 let displayTarget = store.displayWeightInt(target)
-                goalRow(icon: "scalemass.fill", color: .green, label: "Weight Goal", value: "\(displayTarget) \(store.weightUnit) (\(store.weightGoalType))")
+                goalRow(icon: "scalemass.fill", color: FlatColors.primary, label: "Weight Goal", value: "\(displayTarget) \(store.weightUnit) (\(store.weightGoalType))")
                 if store.weightGoalType != "maintain" {
-                    goalRow(icon: "clock.fill", color: .green, label: "Pace", value: store.weightGoalPaceLabel)
+                    goalRow(icon: "clock.fill", color: FlatColors.primary, label: "Pace", value: store.weightGoalPaceLabel)
                 }
             }
         }
-        .padding(18)
-        .background(Color(.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 20))
-        .shadow(color: .black.opacity(0.04), radius: 8, x: 0, y: 4)
+        .flatCard(cornerRadius: 14, padding: 18)
     }
 
     private func goalRow(icon: String, color: Color, label: String, value: String) -> some View {
         HStack {
-            Image(systemName: icon)
-                .font(.system(size: 14))
-                .foregroundStyle(color)
-                .frame(width: 28, height: 28)
-                .background(color.opacity(0.1))
-                .clipShape(RoundedRectangle(cornerRadius: 7))
+            FlatIconCircle(icon: icon, color: color, size: 28)
 
             Text(label)
-                .font(.system(size: 15, weight: .medium, design: .rounded))
+                .font(FlatFont.body(15))
+                .foregroundStyle(FlatColors.textPrimary)
 
             Spacer()
 
             Text(value)
-                .font(.system(size: 15, weight: .semibold, design: .rounded))
-                .foregroundStyle(.secondary)
+                .font(FlatFont.heading(15))
+                .foregroundStyle(FlatColors.textSecondary)
         }
     }
 
@@ -177,53 +160,43 @@ struct ProfileView: View {
         VStack(alignment: .leading, spacing: 14) {
             HStack {
                 Text("Personal Info")
-                    .font(.system(size: 17, weight: .semibold, design: .rounded))
+                    .font(FlatFont.heading(17))
+                    .foregroundStyle(FlatColors.textPrimary)
                 Spacer()
                 Button {
                     showProfileEditor = true
                 } label: {
                     Text("Edit")
-                        .font(.system(size: 14, weight: .semibold, design: .rounded))
-                        .foregroundStyle(.green)
+                        .font(FlatFont.label(14))
+                        .foregroundStyle(FlatColors.primary)
                 }
             }
 
-            infoRow(icon: "person.fill", color: .indigo, label: "Name", value: store.userName.isEmpty ? "Not set" : store.userName)
-            Divider()
-            infoRow(icon: "birthday.cake.fill", color: .orange, label: "Age", value: "\(store.userAge) years")
-            Divider()
-            infoRow(icon: "scalemass.fill", color: .green, label: "Weight", value: store.formattedWeight)
-            Divider()
-            infoRow(icon: "ruler.fill", color: .purple, label: "Height", value: store.formattedHeight)
+            infoRow(icon: "person.fill", color: FlatColors.amethyst, label: "Name", value: store.userName.isEmpty ? "Not set" : store.userName)
+            FlatDivider()
+            infoRow(icon: "birthday.cake.fill", color: FlatColors.tangerine, label: "Age", value: "\(store.userAge) years")
+            FlatDivider()
+            infoRow(icon: "scalemass.fill", color: FlatColors.primary, label: "Weight", value: store.formattedWeight)
+            FlatDivider()
+            infoRow(icon: "ruler.fill", color: FlatColors.amethyst, label: "Height", value: store.formattedHeight)
         }
-        .padding(18)
-        .background(Color(.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 20))
-        .shadow(color: .black.opacity(0.04), radius: 8, x: 0, y: 4)
+        .flatCard(cornerRadius: 14, padding: 18)
     }
 
     private func infoRow(icon: String, color: Color, label: String, value: String) -> some View {
         HStack {
-            Image(systemName: icon)
-                .font(.system(size: 14))
-                .foregroundStyle(color)
-                .frame(width: 28, height: 28)
-                .background(color.opacity(0.1))
-                .clipShape(RoundedRectangle(cornerRadius: 7))
+            FlatIconCircle(icon: icon, color: color, size: 28)
 
             Text(label)
-                .font(.system(size: 15, weight: .medium, design: .rounded))
+                .font(FlatFont.body(15))
+                .foregroundStyle(FlatColors.textPrimary)
 
             Spacer()
 
             Text(value)
-                .font(.system(size: 15, weight: .semibold, design: .rounded))
-                .foregroundStyle(.secondary)
+                .font(FlatFont.heading(15))
+                .foregroundStyle(FlatColors.textSecondary)
         }
-    }
-
-    private var heightString: String {
-        store.formattedHeight
     }
 
     // MARK: - Settings
@@ -231,58 +204,47 @@ struct ProfileView: View {
     private var settingsCard: some View {
         VStack(alignment: .leading, spacing: 14) {
             Text("Settings")
-                .font(.system(size: 17, weight: .semibold, design: .rounded))
+                .font(FlatFont.heading(17))
+                .foregroundStyle(FlatColors.textPrimary)
 
             HStack {
-                Image(systemName: "bell.fill")
-                    .font(.system(size: 14))
-                    .foregroundStyle(.red)
-                    .frame(width: 28, height: 28)
-                    .background(Color.red.opacity(0.1))
-                    .clipShape(RoundedRectangle(cornerRadius: 7))
+                FlatIconCircle(icon: "bell.fill", color: FlatColors.coral, size: 28)
 
                 Text("Notifications")
-                    .font(.system(size: 15, weight: .medium, design: .rounded))
+                    .font(FlatFont.body(15))
+                    .foregroundStyle(FlatColors.textPrimary)
 
                 Spacer()
 
                 Toggle("", isOn: Bindable(store).showNotifications)
-                    .tint(.green)
+                    .tint(FlatColors.primary)
                     .labelsHidden()
             }
 
-            Divider()
+            FlatDivider()
 
             HStack {
-                Image(systemName: "moon.fill")
-                    .font(.system(size: 14))
-                    .foregroundStyle(.indigo)
-                    .frame(width: 28, height: 28)
-                    .background(Color.indigo.opacity(0.1))
-                    .clipShape(RoundedRectangle(cornerRadius: 7))
+                FlatIconCircle(icon: "moon.fill", color: FlatColors.amethyst, size: 28)
 
                 Text("Dark Mode")
-                    .font(.system(size: 15, weight: .medium, design: .rounded))
+                    .font(FlatFont.body(15))
+                    .foregroundStyle(FlatColors.textPrimary)
 
                 Spacer()
 
                 Toggle("", isOn: Bindable(store).useDarkMode)
-                    .tint(.green)
+                    .tint(FlatColors.primary)
                     .labelsHidden()
             }
 
-            Divider()
+            FlatDivider()
 
             HStack {
-                Image(systemName: "ruler")
-                    .font(.system(size: 14))
-                    .foregroundStyle(.teal)
-                    .frame(width: 28, height: 28)
-                    .background(Color.teal.opacity(0.1))
-                    .clipShape(RoundedRectangle(cornerRadius: 7))
+                FlatIconCircle(icon: "ruler", color: FlatColors.sky, size: 28)
 
                 Text("Units")
-                    .font(.system(size: 15, weight: .medium, design: .rounded))
+                    .font(FlatFont.body(15))
+                    .foregroundStyle(FlatColors.textPrimary)
 
                 Spacer()
 
@@ -294,10 +256,7 @@ struct ProfileView: View {
                 .frame(width: 180)
             }
         }
-        .padding(18)
-        .background(Color(.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 20))
-        .shadow(color: .black.opacity(0.04), radius: 8, x: 0, y: 4)
+        .flatCard(cornerRadius: 14, padding: 18)
     }
 
     // MARK: - About
@@ -307,33 +266,25 @@ struct ProfileView: View {
             showAbout = true
         } label: {
             HStack {
-                Image(systemName: "info.circle.fill")
-                    .font(.system(size: 14))
-                    .foregroundStyle(.gray)
-                    .frame(width: 28, height: 28)
-                    .background(Color(.systemGray5))
-                    .clipShape(RoundedRectangle(cornerRadius: 7))
+                FlatIconCircle(icon: "info.circle.fill", color: FlatColors.textSecondary, size: 28)
 
                 Text("About")
-                    .font(.system(size: 15, weight: .medium, design: .rounded))
-                    .foregroundStyle(.primary)
+                    .font(FlatFont.body(15))
+                    .foregroundStyle(FlatColors.textPrimary)
 
                 Spacer()
 
                 Text("v1.0")
-                    .font(.system(size: 13, weight: .medium, design: .rounded))
-                    .foregroundStyle(.tertiary)
+                    .font(FlatFont.label(13))
+                    .foregroundStyle(FlatColors.textTertiary)
 
                 Image(systemName: "chevron.right")
                     .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(Color(.systemGray3))
+                    .foregroundStyle(FlatColors.textTertiary)
             }
-            .padding(18)
-            .background(Color(.secondarySystemGroupedBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 20))
-            .shadow(color: .black.opacity(0.04), radius: 8, x: 0, y: 4)
+            .flatCard(cornerRadius: 14, padding: 18)
         }
-        .buttonStyle(ScaleButtonStyle())
+        .buttonStyle(FlatScaleButtonStyle())
     }
 
     // MARK: - Sign Out
@@ -343,29 +294,21 @@ struct ProfileView: View {
             showSignOutConfirm = true
         } label: {
             HStack {
-                Image(systemName: "rectangle.portrait.and.arrow.right")
-                    .font(.system(size: 14))
-                    .foregroundStyle(.red)
-                    .frame(width: 28, height: 28)
-                    .background(Color.red.opacity(0.1))
-                    .clipShape(RoundedRectangle(cornerRadius: 7))
+                FlatIconCircle(icon: "rectangle.portrait.and.arrow.right", color: FlatColors.coral, size: 28)
 
                 Text("Sign Out")
-                    .font(.system(size: 15, weight: .medium, design: .rounded))
-                    .foregroundStyle(.red)
+                    .font(FlatFont.body(15))
+                    .foregroundStyle(FlatColors.coral)
 
                 Spacer()
 
                 Image(systemName: "chevron.right")
                     .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(Color(.systemGray3))
+                    .foregroundStyle(FlatColors.textTertiary)
             }
-            .padding(18)
-            .background(Color(.secondarySystemGroupedBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 20))
-            .shadow(color: .black.opacity(0.04), radius: 8, x: 0, y: 4)
+            .flatCard(cornerRadius: 14, padding: 18)
         }
-        .buttonStyle(ScaleButtonStyle())
+        .buttonStyle(FlatScaleButtonStyle())
         .confirmationDialog("Sign Out", isPresented: $showSignOutConfirm, titleVisibility: .visible) {
             Button("Sign Out", role: .destructive) {
                 Task { await auth.signOut(mealStore: store) }
@@ -384,7 +327,6 @@ struct ProfileView: View {
             Task { await store.saveProfile() }
         }
     }
-
 }
 
 #Preview {
@@ -401,7 +343,7 @@ struct ProfileEditView: View {
 
     @State private var name: String = ""
     @State private var age: Double = 22
-    @State private var weight: Double = 165  // in display units
+    @State private var weight: Double = 165
     @State private var heightFeet: Int = 5
     @State private var heightInches: Int = 0
     @State private var heightCm: Double = 170
@@ -416,48 +358,31 @@ struct ProfileEditView: View {
                     // Name
                     VStack(alignment: .leading, spacing: 12) {
                         HStack {
-                            Image(systemName: "person.fill")
-                                .font(.system(size: 14))
-                                .foregroundStyle(.indigo)
-                                .frame(width: 28, height: 28)
-                                .background(Color.indigo.opacity(0.1))
-                                .clipShape(RoundedRectangle(cornerRadius: 7))
-
+                            FlatIconCircle(icon: "person.fill", color: FlatColors.amethyst, size: 28)
                             Text("Name")
-                                .font(.system(size: 15, weight: .semibold, design: .rounded))
+                                .font(FlatFont.heading(15))
+                                .foregroundStyle(FlatColors.textPrimary)
                         }
 
                         TextField("Your name", text: $name)
-                            .font(.system(size: 16, weight: .medium, design: .rounded))
+                            .font(FlatFont.body(16))
                             .padding(12)
-                            .background(Color(.systemGray6))
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .background(FlatColors.inputBg)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
-                    .padding(18)
-                    .background(Color(.secondarySystemGroupedBackground))
-                    .clipShape(RoundedRectangle(cornerRadius: 18))
-                    .shadow(color: .black.opacity(0.04), radius: 6, x: 0, y: 3)
+                    .flatCard(cornerRadius: 14, padding: 18)
 
                     // Age
                     profileSlider(
-                        title: "Age",
-                        icon: "birthday.cake.fill",
-                        color: .orange,
-                        value: $age,
-                        range: 13...100,
-                        step: 1,
-                        unit: "years"
+                        title: "Age", icon: "birthday.cake.fill", color: FlatColors.tangerine,
+                        value: $age, range: 13...100, step: 1, unit: "years"
                     )
 
                     // Weight
                     profileSlider(
-                        title: "Weight",
-                        icon: "scalemass.fill",
-                        color: .green,
-                        value: $weight,
-                        range: isMetric ? 35...180 : 80...400,
-                        step: 1,
-                        unit: store.weightUnit
+                        title: "Weight", icon: "scalemass.fill", color: FlatColors.primary,
+                        value: $weight, range: isMetric ? 35...180 : 80...400,
+                        step: 1, unit: store.weightUnit
                     )
 
                     // Height
@@ -471,14 +396,13 @@ struct ProfileEditView: View {
                 .padding(.top, 8)
                 .padding(.bottom, 40)
             }
-            .background(Color(.systemGroupedBackground))
+            .background(FlatColors.background)
             .navigationTitle("Edit Profile")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        dismiss()
-                    }
+                    Button("Cancel") { dismiss() }
+                        .foregroundStyle(FlatColors.textSecondary)
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
@@ -486,7 +410,7 @@ struct ProfileEditView: View {
                         dismiss()
                     }
                     .fontWeight(.semibold)
-                    .foregroundStyle(.green)
+                    .foregroundStyle(FlatColors.primary)
                 }
             }
             .onAppear {
@@ -509,29 +433,25 @@ struct ProfileEditView: View {
     private var imperialHeightEditor: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Image(systemName: "ruler.fill")
-                    .font(.system(size: 14))
-                    .foregroundStyle(.purple)
-                    .frame(width: 28, height: 28)
-                    .background(Color.purple.opacity(0.1))
-                    .clipShape(RoundedRectangle(cornerRadius: 7))
+                FlatIconCircle(icon: "ruler.fill", color: FlatColors.amethyst, size: 28)
 
                 Text("Height")
-                    .font(.system(size: 15, weight: .semibold, design: .rounded))
+                    .font(FlatFont.heading(15))
+                    .foregroundStyle(FlatColors.textPrimary)
 
                 Spacer()
 
                 Text("\(heightFeet)'\(heightInches)\"")
-                    .font(.system(size: 15, weight: .bold, design: .rounded))
-                    .foregroundStyle(.purple)
+                    .font(FlatFont.heading(15))
+                    .foregroundStyle(FlatColors.amethyst)
                     .contentTransition(.numericText())
             }
 
             HStack(spacing: 16) {
                 VStack(spacing: 4) {
                     Text("Feet")
-                        .font(.system(size: 12, weight: .medium, design: .rounded))
-                        .foregroundStyle(.secondary)
+                        .font(FlatFont.caption(12))
+                        .foregroundStyle(FlatColors.textSecondary)
                     Picker("Feet", selection: $heightFeet) {
                         ForEach(3...8, id: \.self) { ft in
                             Text("\(ft)").tag(ft)
@@ -545,8 +465,8 @@ struct ProfileEditView: View {
 
                 VStack(spacing: 4) {
                     Text("Inches")
-                        .font(.system(size: 12, weight: .medium, design: .rounded))
-                        .foregroundStyle(.secondary)
+                        .font(FlatFont.caption(12))
+                        .foregroundStyle(FlatColors.textSecondary)
                     Picker("Inches", selection: $heightInches) {
                         ForEach(0...11, id: \.self) { inch in
                             Text("\(inch)").tag(inch)
@@ -559,23 +479,15 @@ struct ProfileEditView: View {
                 .frame(maxWidth: .infinity)
             }
         }
-        .padding(18)
-        .background(Color(.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 18))
-        .shadow(color: .black.opacity(0.04), radius: 6, x: 0, y: 3)
+        .flatCard(cornerRadius: 14, padding: 18)
     }
 
     // MARK: - Metric Height
 
     private var metricHeightEditor: some View {
         profileSlider(
-            title: "Height",
-            icon: "ruler.fill",
-            color: .purple,
-            value: $heightCm,
-            range: 100...250,
-            step: 1,
-            unit: "cm"
+            title: "Height", icon: "ruler.fill", color: FlatColors.amethyst,
+            value: $heightCm, range: 100...250, step: 1, unit: "cm"
         )
     }
 
@@ -588,20 +500,16 @@ struct ProfileEditView: View {
     ) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Image(systemName: icon)
-                    .font(.system(size: 14))
-                    .foregroundStyle(color)
-                    .frame(width: 28, height: 28)
-                    .background(color.opacity(0.1))
-                    .clipShape(RoundedRectangle(cornerRadius: 7))
+                FlatIconCircle(icon: icon, color: color, size: 28)
 
                 Text(title)
-                    .font(.system(size: 15, weight: .semibold, design: .rounded))
+                    .font(FlatFont.heading(15))
+                    .foregroundStyle(FlatColors.textPrimary)
 
                 Spacer()
 
                 Text("\(Int(value.wrappedValue)) \(unit)")
-                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .font(FlatFont.heading(15))
                     .foregroundStyle(color)
                     .contentTransition(.numericText())
             }
@@ -611,24 +519,20 @@ struct ProfileEditView: View {
 
             HStack {
                 Text("\(Int(range.lowerBound))")
-                    .font(.system(size: 10, weight: .medium, design: .rounded))
-                    .foregroundStyle(.tertiary)
+                    .font(FlatFont.caption(10))
+                    .foregroundStyle(FlatColors.textTertiary)
                 Spacer()
                 Text("\(Int(range.upperBound))")
-                    .font(.system(size: 10, weight: .medium, design: .rounded))
-                    .foregroundStyle(.tertiary)
+                    .font(FlatFont.caption(10))
+                    .foregroundStyle(FlatColors.textTertiary)
             }
         }
-        .padding(18)
-        .background(Color(.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 18))
-        .shadow(color: .black.opacity(0.04), radius: 6, x: 0, y: 3)
+        .flatCard(cornerRadius: 14, padding: 18)
     }
 
     private func saveProfile() {
         store.userName = name.trimmingCharacters(in: .whitespacesAndNewlines)
         store.userAge = Int(age)
-        // Convert display units back to imperial for storage
         store.userWeight = store.weightFromDisplay(weight)
         if isMetric {
             store.userHeight = store.heightFromDisplay(heightCm)

@@ -37,6 +37,15 @@ enum MealType: String, CaseIterable, Identifiable, Codable {
         case .snack: return [.mint, .green]
         }
     }
+
+    var flatColor: Color {
+        switch self {
+        case .breakfast: return FlatColors.tangerine
+        case .lunch: return FlatColors.sunflower
+        case .dinner: return FlatColors.amethyst
+        case .snack: return FlatColors.mint
+        }
+    }
 }
 
 // MARK: - Scan Source
@@ -67,6 +76,14 @@ enum ScanSource: String, Codable {
         case .receipt: return .blue
         case .screenshot: return .purple
         case .photo: return .green
+        }
+    }
+
+    var flatColor: Color {
+        switch self {
+        case .receipt: return FlatColors.ocean
+        case .screenshot: return FlatColors.amethyst
+        case .photo: return FlatColors.primary
         }
     }
 }
@@ -330,8 +347,10 @@ class MealStore {
     var userAge: Int = 22
     var userWeight: Double = 165
     var userHeight: Double = 72
+    var userGender: String = "male"  // "male", "female", "other"
     var showNotifications: Bool = true
     var useDarkMode: Bool = false
+    var hasCompletedOnboarding: Bool = false
 
     // Water Tracking
     var waterIntake: Int = 0
@@ -621,6 +640,7 @@ class MealStore {
                 self.userAge = profile.userAge
                 self.userWeight = profile.userWeight
                 self.userHeight = profile.userHeight
+                self.userGender = profile.userGender ?? "male"
                 self.dailyCalorieGoal = profile.dailyCalorieGoal
                 self.dailyProteinGoal = profile.dailyProteinGoal
                 self.dailyCarbsGoal = profile.dailyCarbsGoal
@@ -628,6 +648,7 @@ class MealStore {
                 self.streakDays = profile.streakDays
                 self.showNotifications = profile.showNotifications
                 self.useDarkMode = profile.useDarkMode
+                self.hasCompletedOnboarding = profile.hasCompletedOnboarding ?? false
                 // Weekend plan
                 self.useWeekendPlan = profile.useWeekendPlan
                 self.weekendCalorieGoal = profile.weekendCalorieGoal
@@ -654,6 +675,7 @@ class MealStore {
             userAge: userAge,
             userWeight: userWeight,
             userHeight: userHeight,
+            userGender: userGender,
             dailyCalorieGoal: dailyCalorieGoal,
             dailyProteinGoal: dailyProteinGoal,
             dailyCarbsGoal: dailyCarbsGoal,
@@ -661,6 +683,7 @@ class MealStore {
             streakDays: streakDays,
             showNotifications: showNotifications,
             useDarkMode: useDarkMode,
+            hasCompletedOnboarding: hasCompletedOnboarding,
             unitSystem: unitSystem
         )
         do {
@@ -957,7 +980,7 @@ class MealStore {
 
     func addWater() {
         withAnimation(.spring(response: 0.3)) {
-            waterIntake = min(waterIntake + 1, waterGoal)
+            waterIntake = min(waterIntake + 1, 99)
         }
         Task { await saveWaterLog() }
     }

@@ -18,41 +18,30 @@ struct MacroBarView: View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Text(label)
-                    .font(.system(size: 13, weight: .semibold, design: .rounded))
-                    .foregroundStyle(.secondary)
+                    .font(FlatFont.label(13))
+                    .foregroundStyle(FlatColors.textSecondary)
 
                 Spacer()
 
                 Text("\(Int(current))\(unit)")
-                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .font(FlatFont.label(13))
+                    .fontWeight(.bold)
                     .foregroundStyle(color)
                 +
                 Text(" / \(Int(goal))\(unit)")
-                    .font(.system(size: 11, weight: .regular, design: .rounded))
-                    .foregroundStyle(.tertiary)
+                    .font(FlatFont.caption(11))
+                    .foregroundStyle(FlatColors.textTertiary)
             }
 
-            GeometryReader { geo in
-                ZStack(alignment: .leading) {
-                    Capsule()
-                        .fill(Color(.systemGray5))
-                        .frame(height: 8)
-
-                    Capsule()
-                        .fill(color.gradient)
-                        .frame(width: geo.size.width * animatedProgress, height: 8)
-                        .shadow(color: color.opacity(0.3), radius: 4, x: 0, y: 2)
-                }
-            }
-            .frame(height: 8)
+            FlatProgressBar(progress: animatedProgress, color: color, height: 8)
         }
         .onAppear {
-            withAnimation(.spring(response: 0.8, dampingFraction: 0.7).delay(0.2)) {
+            withAnimation(.easeOut(duration: 0.6).delay(0.2)) {
                 animatedProgress = progress
             }
         }
         .onChange(of: current) { _, _ in
-            withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) {
+            withAnimation(.easeOut(duration: 0.3)) {
                 animatedProgress = progress
             }
         }
@@ -61,9 +50,9 @@ struct MacroBarView: View {
 
 #Preview {
     VStack(spacing: 20) {
-        MacroBarView(label: "Protein", current: 75, goal: 150, unit: "g", color: .blue)
-        MacroBarView(label: "Carbs", current: 122, goal: 250, unit: "g", color: .orange)
-        MacroBarView(label: "Fat", current: 46, goal: 65, unit: "g", color: .pink)
+        MacroBarView(label: "Protein", current: 75, goal: 150, unit: "g", color: FlatColors.ocean)
+        MacroBarView(label: "Carbs", current: 122, goal: 250, unit: "g", color: FlatColors.tangerine)
+        MacroBarView(label: "Fat", current: 46, goal: 65, unit: "g", color: FlatColors.rose)
     }
     .padding()
 }

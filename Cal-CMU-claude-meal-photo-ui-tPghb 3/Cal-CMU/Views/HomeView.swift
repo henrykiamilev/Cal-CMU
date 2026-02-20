@@ -17,6 +17,7 @@ struct HomeView: View {
                     StreakBadgeView(streakDays: store.streakDays)
                     calorieCard
                     macroCard
+                    WaterTrackerView()
                     quickAddSection
                     todaysMealsSection
                     Color.clear.frame(height: 100)
@@ -24,7 +25,7 @@ struct HomeView: View {
                 .padding(.horizontal, 20)
                 .padding(.top, 8)
             }
-            .background(Color(.systemGroupedBackground))
+            .background(FlatColors.background)
             .navigationBarHidden(true)
         }
     }
@@ -35,32 +36,24 @@ struct HomeView: View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 Text("\(greeting), \(store.userName)")
-                    .font(.system(size: 26, weight: .bold, design: .rounded))
-                    .foregroundStyle(.primary)
+                    .font(FlatFont.title(26))
+                    .foregroundStyle(FlatColors.textPrimary)
 
                 Text(dateString)
-                    .font(.system(size: 14, weight: .medium, design: .rounded))
-                    .foregroundStyle(.secondary)
+                    .font(FlatFont.label(14))
+                    .foregroundStyle(FlatColors.textSecondary)
             }
 
             Spacer()
 
-            // Profile avatar
-            ZStack {
-                Circle()
-                    .fill(
-                        LinearGradient(
-                            colors: [.green.opacity(0.6), .green],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .frame(width: 44, height: 44)
-
-                Text(String(store.userName.prefix(1)).uppercased())
-                    .font(.system(size: 18, weight: .bold, design: .rounded))
-                    .foregroundStyle(.white)
-            }
+            RoundedRectangle(cornerRadius: 12)
+                .fill(FlatColors.primary)
+                .frame(width: 44, height: 44)
+                .overlay(
+                    Text(String(store.userName.prefix(1)).uppercased())
+                        .font(FlatFont.heading(18))
+                        .foregroundStyle(.white)
+                )
         }
         .padding(.top, 16)
     }
@@ -85,21 +78,23 @@ struct HomeView: View {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Daily Calories")
-                        .font(.system(size: 17, weight: .semibold, design: .rounded))
+                        .font(FlatFont.heading(17))
+                        .foregroundStyle(FlatColors.textPrimary)
                     if store.useWeekendPlan {
                         Text(store.activePlanLabel)
-                            .font(.system(size: 11, weight: .medium, design: .rounded))
-                            .foregroundStyle(.green)
+                            .font(FlatFont.caption(11))
+                            .foregroundStyle(FlatColors.primary)
                             .padding(.horizontal, 8)
                             .padding(.vertical, 2)
-                            .background(Color.green.opacity(0.1))
-                            .clipShape(Capsule())
+                            .background(FlatColors.primary.opacity(0.1))
+                            .clipShape(RoundedRectangle(cornerRadius: 6))
                     }
                 }
                 Spacer()
                 Text("\(store.totalCaloriesToday) / \(store.activeCalorieGoal)")
-                    .font(.system(size: 13, weight: .bold, design: .rounded))
-                    .foregroundStyle(.green)
+                    .font(FlatFont.mono(13))
+                    .fontWeight(.bold)
+                    .foregroundStyle(FlatColors.primary)
             }
 
             CalorieRingView(
@@ -107,11 +102,7 @@ struct HomeView: View {
                 goal: store.activeCalorieGoal
             )
         }
-        .frame(maxWidth: .infinity)
-        .padding(20)
-        .background(Color(.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 24))
-        .shadow(color: .black.opacity(0.05), radius: 12, x: 0, y: 6)
+        .flatCard(cornerRadius: 16, padding: 20)
     }
 
     // MARK: - Macro Card
@@ -120,27 +111,25 @@ struct HomeView: View {
         VStack(spacing: 16) {
             HStack {
                 Text("Macronutrients")
-                    .font(.system(size: 17, weight: .semibold, design: .rounded))
+                    .font(FlatFont.heading(17))
+                    .foregroundStyle(FlatColors.textPrimary)
                 Spacer()
             }
 
             MacroBarView(
                 label: "Protein", current: store.totalProteinToday,
-                goal: store.activeProteinGoal, unit: "g", color: .blue
+                goal: store.activeProteinGoal, unit: "g", color: FlatColors.ocean
             )
             MacroBarView(
                 label: "Carbs", current: store.totalCarbsToday,
-                goal: store.activeCarbsGoal, unit: "g", color: .orange
+                goal: store.activeCarbsGoal, unit: "g", color: FlatColors.tangerine
             )
             MacroBarView(
                 label: "Fat", current: store.totalFatToday,
-                goal: store.activeFatGoal, unit: "g", color: .pink
+                goal: store.activeFatGoal, unit: "g", color: FlatColors.rose
             )
         }
-        .padding(20)
-        .background(Color(.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 24))
-        .shadow(color: .black.opacity(0.05), radius: 12, x: 0, y: 6)
+        .flatCard(cornerRadius: 16, padding: 20)
     }
 
     // MARK: - Quick Add
@@ -148,7 +137,8 @@ struct HomeView: View {
     private var quickAddSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Quick Add")
-                .font(.system(size: 17, weight: .semibold, design: .rounded))
+                .font(FlatFont.heading(17))
+                .foregroundStyle(FlatColors.textPrimary)
 
             HStack(spacing: 10) {
                 ForEach(MealType.allCases) { type in
@@ -156,36 +146,26 @@ struct HomeView: View {
                         onQuickAdd(type)
                     } label: {
                         VStack(spacing: 8) {
-                            ZStack {
-                                Circle()
-                                    .fill(
-                                        LinearGradient(
-                                            colors: type.gradient,
-                                            startPoint: .topLeading,
-                                            endPoint: .bottomTrailing
-                                        )
-                                    )
-                                    .frame(width: 48, height: 48)
-
-                                Image(systemName: type.icon)
-                                    .font(.system(size: 18))
-                                    .foregroundStyle(.white)
-                            }
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(type.flatColor.opacity(0.12))
+                                .frame(width: 48, height: 48)
+                                .overlay(
+                                    Image(systemName: type.icon)
+                                        .font(.system(size: 18, weight: .medium))
+                                        .foregroundStyle(type.flatColor)
+                                )
 
                             Text(type.rawValue)
-                                .font(.system(size: 11, weight: .medium, design: .rounded))
-                                .foregroundStyle(.primary)
+                                .font(FlatFont.caption(11))
+                                .foregroundStyle(FlatColors.textSecondary)
                         }
                         .frame(maxWidth: .infinity)
                     }
-                    .buttonStyle(ScaleButtonStyle())
+                    .buttonStyle(FlatScaleButtonStyle())
                 }
             }
         }
-        .padding(18)
-        .background(Color(.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 20))
-        .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 4)
+        .flatCard(cornerRadius: 14, padding: 18)
     }
 
     // MARK: - Nudge Cards
@@ -200,28 +180,22 @@ struct HomeView: View {
 
     private func nudgeCard(_ nudge: MealStore.Nudge) -> some View {
         HStack(spacing: 12) {
-            Image(systemName: nudge.icon)
-                .font(.system(size: 16, weight: .semibold))
-                .foregroundStyle(nudge.swiftUIColor)
-                .frame(width: 34, height: 34)
-                .background(nudge.swiftUIColor.opacity(0.12))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+            FlatIconCircle(icon: nudge.icon, color: nudge.swiftUIColor, size: 34)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(nudge.title)
-                    .font(.system(size: 14, weight: .semibold, design: .rounded))
+                    .font(FlatFont.label(14))
+                    .fontWeight(.semibold)
+                    .foregroundStyle(FlatColors.textPrimary)
                 Text(nudge.message)
-                    .font(.system(size: 12, weight: .medium, design: .rounded))
-                    .foregroundStyle(.secondary)
+                    .font(FlatFont.caption(12))
+                    .foregroundStyle(FlatColors.textSecondary)
                     .lineLimit(2)
             }
 
             Spacer()
         }
-        .padding(14)
-        .background(Color(.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.04), radius: 6, x: 0, y: 3)
+        .flatCard(cornerRadius: 12, padding: 14)
     }
 
     // MARK: - Today's Meals
@@ -230,11 +204,12 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: 14) {
             HStack {
                 Text("Today's Meals")
-                    .font(.system(size: 20, weight: .bold, design: .rounded))
+                    .font(FlatFont.title(20))
+                    .foregroundStyle(FlatColors.textPrimary)
                 Spacer()
                 Text("\(store.todaysMeals.count) logged")
-                    .font(.system(size: 13, weight: .medium, design: .rounded))
-                    .foregroundStyle(.secondary)
+                    .font(FlatFont.label(13))
+                    .foregroundStyle(FlatColors.textSecondary)
             }
 
             if store.todaysMeals.isEmpty {
@@ -243,10 +218,7 @@ struct HomeView: View {
                 ForEach(store.todaysMeals) { meal in
                     MealCardView(meal: meal)
                         .onTapGesture { onMealTap(meal) }
-                        .transition(.asymmetric(
-                            insertion: .scale(scale: 0.9).combined(with: .opacity),
-                            removal: .opacity
-                        ))
+                        .transition(.opacity)
                 }
             }
         }
@@ -256,36 +228,35 @@ struct HomeView: View {
         VStack(spacing: 12) {
             Image(systemName: "camera.macro")
                 .font(.system(size: 36))
-                .foregroundStyle(.secondary.opacity(0.5))
+                .foregroundStyle(FlatColors.textTertiary)
 
             Text("No meals logged yet")
-                .font(.system(size: 15, weight: .medium, design: .rounded))
-                .foregroundStyle(.secondary)
+                .font(FlatFont.body(15))
+                .foregroundStyle(FlatColors.textSecondary)
 
             Button {
                 onScanTap()
             } label: {
                 Text("Scan a receipt to start")
-                    .font(.system(size: 14, weight: .semibold, design: .rounded))
-                    .foregroundStyle(.green)
+                    .font(FlatFont.label(14))
+                    .foregroundStyle(FlatColors.primary)
             }
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 40)
-        .background(Color(.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 20))
-        .shadow(color: .black.opacity(0.04), radius: 8, x: 0, y: 4)
+        .background(FlatColors.card)
+        .clipShape(RoundedRectangle(cornerRadius: 14))
     }
 }
 
-// MARK: - Scale Button Style
+// MARK: - Flat Scale Button Style
 
-struct ScaleButtonStyle: ButtonStyle {
+struct FlatScaleButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .scaleEffect(configuration.isPressed ? 0.92 : 1.0)
-            .opacity(configuration.isPressed ? 0.8 : 1.0)
-            .animation(.spring(response: 0.2, dampingFraction: 0.7), value: configuration.isPressed)
+            .scaleEffect(configuration.isPressed ? 0.95 : 1.0)
+            .opacity(configuration.isPressed ? 0.7 : 1.0)
+            .animation(.easeOut(duration: 0.15), value: configuration.isPressed)
     }
 }
 

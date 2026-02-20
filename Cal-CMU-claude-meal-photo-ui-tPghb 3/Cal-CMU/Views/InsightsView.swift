@@ -8,19 +8,13 @@ struct InsightsView: View {
         NavigationStack {
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 20) {
-                    // Weekly chart
                     WeeklyChartView(
                         data: store.weeklyCalories,
                         goal: store.activeCalorieGoal
                     )
 
-                    // Average stats
                     averageStatsCard
-
-                    // Macro split
                     macroSplitCard
-
-                    // Top nutrients
                     topNutrientsCard
 
                     Color.clear.frame(height: 100)
@@ -28,7 +22,7 @@ struct InsightsView: View {
                 .padding(.horizontal, 20)
                 .padding(.top, 8)
             }
-            .background(Color(.systemGroupedBackground))
+            .background(FlatColors.background)
             .navigationTitle("Insights")
             .navigationBarTitleDisplayMode(.large)
         }
@@ -42,45 +36,37 @@ struct InsightsView: View {
                 value: "\(store.averageWeeklyCalories)",
                 label: "Avg Cal/Day",
                 icon: "flame.fill",
-                color: .orange
+                color: FlatColors.tangerine
             )
             statBubble(
                 value: "\(store.todaysMeals.count)",
                 label: "Meals Today",
                 icon: "fork.knife",
-                color: .green
+                color: FlatColors.primary
             )
             statBubble(
                 value: "\(store.streakDays)",
                 label: "Day Streak",
                 icon: "flame.fill",
-                color: .red
+                color: FlatColors.coral
             )
         }
         .padding(.vertical, 16)
-        .background(Color(.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 20))
-        .shadow(color: .black.opacity(0.04), radius: 8, x: 0, y: 4)
+        .background(FlatColors.card)
+        .clipShape(RoundedRectangle(cornerRadius: 14))
     }
 
     private func statBubble(value: String, label: String, icon: String, color: Color) -> some View {
         VStack(spacing: 8) {
-            ZStack {
-                Circle()
-                    .fill(color.opacity(0.1))
-                    .frame(width: 44, height: 44)
-                Image(systemName: icon)
-                    .font(.system(size: 18))
-                    .foregroundStyle(color)
-            }
+            FlatIconCircle(icon: icon, color: color, size: 44)
 
             Text(value)
-                .font(.system(size: 20, weight: .bold, design: .rounded))
-                .foregroundStyle(.primary)
+                .font(FlatFont.title(20))
+                .foregroundStyle(FlatColors.textPrimary)
 
             Text(label)
-                .font(.system(size: 11, weight: .medium, design: .rounded))
-                .foregroundStyle(.secondary)
+                .font(FlatFont.caption(11))
+                .foregroundStyle(FlatColors.textSecondary)
         }
         .frame(maxWidth: .infinity)
     }
@@ -90,77 +76,72 @@ struct InsightsView: View {
     private var macroSplitCard: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Macro Split")
-                .font(.system(size: 17, weight: .semibold, design: .rounded))
+                .font(FlatFont.heading(17))
+                .foregroundStyle(FlatColors.textPrimary)
 
             HStack(spacing: 16) {
-                // Donut chart
                 ZStack {
                     let p = store.macroPercentages
 
                     Circle()
-                        .stroke(Color(.systemGray5), lineWidth: 16)
+                        .stroke(FlatColors.divider, lineWidth: 16)
                         .frame(width: 100, height: 100)
 
-                    // Protein arc
                     Circle()
                         .trim(from: 0, to: animateScore ? p.protein / 100 : 0)
-                        .stroke(Color.blue.gradient, style: StrokeStyle(lineWidth: 16, lineCap: .round))
+                        .stroke(FlatColors.ocean, style: StrokeStyle(lineWidth: 16, lineCap: .round))
                         .frame(width: 100, height: 100)
                         .rotationEffect(.degrees(-90))
 
-                    // Carbs arc
                     Circle()
                         .trim(from: 0, to: animateScore ? p.carbs / 100 : 0)
-                        .stroke(Color.orange.gradient, style: StrokeStyle(lineWidth: 16, lineCap: .round))
+                        .stroke(FlatColors.tangerine, style: StrokeStyle(lineWidth: 16, lineCap: .round))
                         .frame(width: 100, height: 100)
                         .rotationEffect(.degrees(-90 + 360 * p.protein / 100))
 
-                    // Fat arc
                     Circle()
                         .trim(from: 0, to: animateScore ? p.fat / 100 : 0)
-                        .stroke(Color.pink.gradient, style: StrokeStyle(lineWidth: 16, lineCap: .round))
+                        .stroke(FlatColors.rose, style: StrokeStyle(lineWidth: 16, lineCap: .round))
                         .frame(width: 100, height: 100)
                         .rotationEffect(.degrees(-90 + 360 * (p.protein + p.carbs) / 100))
 
                     VStack(spacing: 0) {
                         Text("\(store.totalCaloriesToday)")
-                            .font(.system(size: 16, weight: .bold, design: .rounded))
+                            .font(FlatFont.heading(16))
+                            .foregroundStyle(FlatColors.textPrimary)
                         Text("cal")
-                            .font(.system(size: 10, weight: .medium, design: .rounded))
-                            .foregroundStyle(.secondary)
+                            .font(FlatFont.caption(10))
+                            .foregroundStyle(FlatColors.textSecondary)
                     }
                 }
-                .animation(.spring(response: 0.8, dampingFraction: 0.7), value: animateScore)
+                .animation(.easeOut(duration: 0.6), value: animateScore)
 
-                // Legend
                 VStack(alignment: .leading, spacing: 12) {
-                    macroLegend("Protein", pct: store.macroPercentages.protein, grams: store.totalProteinToday, color: .blue)
-                    macroLegend("Carbs", pct: store.macroPercentages.carbs, grams: store.totalCarbsToday, color: .orange)
-                    macroLegend("Fat", pct: store.macroPercentages.fat, grams: store.totalFatToday, color: .pink)
+                    macroLegend("Protein", pct: store.macroPercentages.protein, grams: store.totalProteinToday, color: FlatColors.ocean)
+                    macroLegend("Carbs", pct: store.macroPercentages.carbs, grams: store.totalCarbsToday, color: FlatColors.tangerine)
+                    macroLegend("Fat", pct: store.macroPercentages.fat, grams: store.totalFatToday, color: FlatColors.rose)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(20)
-        .background(Color(.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 20))
-        .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 4)
+        .flatCard(cornerRadius: 14, padding: 20)
         .onAppear { animateScore = true }
     }
 
     private func macroLegend(_ name: String, pct: Double, grams: Double, color: Color) -> some View {
         HStack(spacing: 8) {
-            Circle()
-                .fill(color.gradient)
+            RoundedRectangle(cornerRadius: 3)
+                .fill(color)
                 .frame(width: 10, height: 10)
 
             VStack(alignment: .leading, spacing: 1) {
                 Text(name)
-                    .font(.system(size: 13, weight: .semibold, design: .rounded))
+                    .font(FlatFont.label(13))
+                    .foregroundStyle(FlatColors.textPrimary)
                 Text("\(Int(grams))g (\(Int(pct))%)")
-                    .font(.system(size: 11, weight: .medium, design: .rounded))
-                    .foregroundStyle(.secondary)
+                    .font(FlatFont.caption(11))
+                    .foregroundStyle(FlatColors.textSecondary)
             }
         }
     }
@@ -170,39 +151,33 @@ struct InsightsView: View {
     private var topNutrientsCard: some View {
         VStack(alignment: .leading, spacing: 14) {
             Text("Today's Breakdown")
-                .font(.system(size: 17, weight: .semibold, design: .rounded))
+                .font(FlatFont.heading(17))
+                .foregroundStyle(FlatColors.textPrimary)
 
-            nutrientDetailRow("Calories", value: "\(store.totalCaloriesToday)", unit: "cal", icon: "flame.fill", color: .orange)
-            nutrientDetailRow("Protein", value: "\(Int(store.totalProteinToday))", unit: "g", icon: "circle.hexagongrid.fill", color: .blue)
-            nutrientDetailRow("Carbs", value: "\(Int(store.totalCarbsToday))", unit: "g", icon: "bolt.fill", color: .orange)
-            nutrientDetailRow("Fat", value: "\(Int(store.totalFatToday))", unit: "g", icon: "drop.triangle.fill", color: .pink)
-            nutrientDetailRow("Vitamin C", value: "\(Int(store.totalVitaminCToday))", unit: "mg", icon: "pills.fill", color: .yellow)
-            nutrientDetailRow("Iron", value: String(format: "%.1f", store.totalIronToday), unit: "mg", icon: "cross.vial.fill", color: .red)
-            nutrientDetailRow("Calcium", value: "\(Int(store.totalCalciumToday))", unit: "mg", icon: "bone.fill", color: .gray)
+            nutrientDetailRow("Calories", value: "\(store.totalCaloriesToday)", unit: "cal", icon: "flame.fill", color: FlatColors.tangerine)
+            nutrientDetailRow("Protein", value: "\(Int(store.totalProteinToday))", unit: "g", icon: "circle.hexagongrid.fill", color: FlatColors.ocean)
+            nutrientDetailRow("Carbs", value: "\(Int(store.totalCarbsToday))", unit: "g", icon: "bolt.fill", color: FlatColors.sunflower)
+            nutrientDetailRow("Fat", value: "\(Int(store.totalFatToday))", unit: "g", icon: "drop.triangle.fill", color: FlatColors.rose)
+            nutrientDetailRow("Vitamin C", value: "\(Int(store.totalVitaminCToday))", unit: "mg", icon: "pills.fill", color: FlatColors.sunflower)
+            nutrientDetailRow("Iron", value: String(format: "%.1f", store.totalIronToday), unit: "mg", icon: "cross.vial.fill", color: FlatColors.coral)
+            nutrientDetailRow("Calcium", value: "\(Int(store.totalCalciumToday))", unit: "mg", icon: "bone.fill", color: FlatColors.textSecondary)
         }
-        .padding(20)
-        .background(Color(.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 20))
-        .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 4)
+        .flatCard(cornerRadius: 14, padding: 20)
     }
 
     private func nutrientDetailRow(_ name: String, value: String, unit: String, icon: String, color: Color) -> some View {
         HStack {
-            Image(systemName: icon)
-                .font(.system(size: 14))
-                .foregroundStyle(color)
-                .frame(width: 30, height: 30)
-                .background(color.opacity(0.1))
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+            FlatIconCircle(icon: icon, color: color, size: 30)
 
             Text(name)
-                .font(.system(size: 14, weight: .medium, design: .rounded))
+                .font(FlatFont.body(14))
+                .foregroundStyle(FlatColors.textPrimary)
 
             Spacer()
 
             Text("\(value) \(unit)")
-                .font(.system(size: 14, weight: .bold, design: .rounded))
-                .foregroundStyle(.secondary)
+                .font(FlatFont.heading(14))
+                .foregroundStyle(FlatColors.textSecondary)
         }
     }
 }

@@ -50,7 +50,6 @@ struct MainTabView: View {
 
     var body: some View {
         ZStack(alignment: .bottom) {
-            // Tab content
             Group {
                 switch selectedTab {
                 case .home:
@@ -80,19 +79,24 @@ struct MainTabView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
 
-            // Custom Tab Bar
             customTabBar
         }
         .ignoresSafeArea(.keyboard)
         .sheet(isPresented: $showCamera) {
-            CameraView(mealType: selectedMealType) { image, scanSource in
+            CameraView(mealType: selectedMealType, onMealCaptured: { image, scanSource in
                 capturedImage = image
                 selectedScanSource = scanSource
                 analyzedMeal = store.generateMockAnalysis(from: image, mealType: selectedMealType, scanSource: scanSource)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                     showMealDetail = true
                 }
-            }
+            }, onMenuItemSelected: { meal in
+                capturedImage = nil
+                analyzedMeal = meal
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    showMealDetail = true
+                }
+            })
         }
         .sheet(isPresented: $showMealDetail) {
             if let meal = analyzedMeal {
@@ -142,7 +146,6 @@ struct MainTabView: View {
         HStack(spacing: 0) {
             ForEach(AppTab.allCases, id: \.rawValue) { tab in
                 if tab == .scan {
-                    // Center camera button
                     scanButton
                 } else {
                     tabButton(tab)
@@ -154,8 +157,7 @@ struct MainTabView: View {
         .padding(.bottom, 28)
         .background(
             Rectangle()
-                .fill(.ultraThinMaterial)
-                .shadow(color: .black.opacity(0.08), radius: 20, x: 0, y: -8)
+                .fill(FlatColors.card)
                 .ignoresSafeArea(edges: .bottom)
         )
     }
@@ -165,16 +167,9 @@ struct MainTabView: View {
             openCamera(type: .lunch)
         } label: {
             ZStack {
-                Circle()
-                    .fill(
-                        LinearGradient(
-                            colors: [Color(red: 0.2, green: 0.8, blue: 0.4), Color(red: 0.1, green: 0.65, blue: 0.35)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .frame(width: 58, height: 58)
-                    .shadow(color: .green.opacity(0.4), radius: 12, x: 0, y: 6)
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(FlatColors.primary)
+                    .frame(width: 56, height: 56)
 
                 Image(systemName: "doc.text.viewfinder")
                     .font(.system(size: 22, weight: .semibold))
@@ -187,7 +182,7 @@ struct MainTabView: View {
 
     private func tabButton(_ tab: AppTab) -> some View {
         Button {
-            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+            withAnimation(.easeOut(duration: 0.2)) {
                 selectedTab = tab
             }
         } label: {
@@ -197,9 +192,9 @@ struct MainTabView: View {
                     .symbolEffect(.bounce, value: selectedTab == tab)
 
                 Text(tab.label)
-                    .font(.system(size: 10, weight: .medium, design: .rounded))
+                    .font(FlatFont.caption(10))
             }
-            .foregroundStyle(selectedTab == tab ? .green : .secondary)
+            .foregroundStyle(selectedTab == tab ? FlatColors.primary : FlatColors.textTertiary)
             .frame(maxWidth: .infinity)
         }
     }

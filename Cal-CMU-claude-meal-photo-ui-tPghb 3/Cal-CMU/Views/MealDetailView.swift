@@ -25,7 +25,7 @@ struct MealDetailView: View {
                 }
                 .padding(.horizontal, 20)
             }
-            .background(Color(.systemGroupedBackground))
+            .background(FlatColors.background)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -34,16 +34,17 @@ struct MealDetailView: View {
                     } label: {
                         Image(systemName: "xmark")
                             .font(.system(size: 14, weight: .semibold))
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(FlatColors.textSecondary)
                             .frame(width: 32, height: 32)
-                            .background(Color(.systemGray5))
-                            .clipShape(Circle())
+                            .background(FlatColors.inputBg)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
                 }
 
                 ToolbarItem(placement: .principal) {
                     Text("Meal Analysis")
-                        .font(.system(size: 17, weight: .semibold, design: .rounded))
+                        .font(FlatFont.heading(17))
+                        .foregroundStyle(FlatColors.textPrimary)
                 }
             }
         }
@@ -60,40 +61,25 @@ struct MealDetailView: View {
                         .aspectRatio(contentMode: .fill)
                 } else {
                     ZStack {
-                        LinearGradient(
-                            colors: meal.mealType.gradient.map { $0.opacity(0.15) },
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
+                        Rectangle()
+                            .fill(meal.mealType.flatColor.opacity(0.1))
                         Image(systemName: "fork.knife")
                             .font(.system(size: 48))
-                            .foregroundStyle(meal.mealType.color.opacity(0.3))
+                            .foregroundStyle(meal.mealType.flatColor.opacity(0.25))
                     }
                 }
             }
             .frame(height: 260)
-            .clipShape(RoundedRectangle(cornerRadius: 24))
-            .shadow(color: .black.opacity(0.1), radius: 16, x: 0, y: 8)
+            .clipShape(RoundedRectangle(cornerRadius: 16))
 
-            // Meal type badge overlay
-            HStack(spacing: 6) {
-                Image(systemName: meal.mealType.icon)
-                    .font(.system(size: 11))
-                Text(meal.mealType.rawValue)
-                    .font(.system(size: 12, weight: .semibold, design: .rounded))
-            }
-            .foregroundStyle(.white)
-            .padding(.horizontal, 12)
-            .padding(.vertical, 6)
-            .background(.ultraThinMaterial)
-            .clipShape(Capsule())
-            .padding(16)
+            FlatBadge(text: meal.mealType.rawValue, color: meal.mealType.flatColor, icon: meal.mealType.icon)
+                .padding(16)
         }
         .padding(.top, 8)
         .opacity(appeared ? 1 : 0)
         .offset(y: appeared ? 0 : 20)
         .onAppear {
-            withAnimation(.spring(response: 0.5, dampingFraction: 0.8).delay(0.1)) {
+            withAnimation(.easeOut(duration: 0.4).delay(0.1)) {
                 appeared = true
             }
         }
@@ -104,23 +90,25 @@ struct MealDetailView: View {
     private var calorieSummarySection: some View {
         VStack(spacing: 8) {
             Text(meal.name)
-                .font(.system(size: 24, weight: .bold, design: .rounded))
+                .font(FlatFont.title(24))
+                .foregroundStyle(FlatColors.textPrimary)
                 .multilineTextAlignment(.center)
 
             HStack(spacing: 8) {
                 Image(systemName: "flame.fill")
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(FlatColors.tangerine)
                     .font(.system(size: 18))
                 Text("\(meal.calories)")
-                    .font(.system(size: 28, weight: .bold, design: .rounded))
+                    .font(FlatFont.title(28))
+                    .foregroundStyle(FlatColors.textPrimary)
                     .contentTransition(.numericText())
                 Text("calories")
-                    .font(.system(size: 16, weight: .medium, design: .rounded))
-                    .foregroundStyle(.secondary)
+                    .font(FlatFont.body(16))
+                    .foregroundStyle(FlatColors.textSecondary)
             }
         }
         .opacity(appeared ? 1 : 0)
-        .animation(.spring(response: 0.5).delay(0.2), value: appeared)
+        .animation(.easeOut(duration: 0.4).delay(0.2), value: appeared)
     }
 
     // MARK: - Scan Source Badge
@@ -130,20 +118,20 @@ struct MealDetailView: View {
             Image(systemName: meal.scanSource.icon)
                 .font(.system(size: 12, weight: .semibold))
             Text(meal.scanSource.label)
-                .font(.system(size: 13, weight: .semibold, design: .rounded))
+                .font(FlatFont.label(13))
             if let restaurant = meal.restaurantName {
-                Text("·")
-                    .foregroundStyle(.secondary)
+                Text("\u{00B7}")
+                    .foregroundStyle(FlatColors.textTertiary)
                 Text(restaurant)
-                    .font(.system(size: 13, weight: .medium, design: .rounded))
-                    .foregroundStyle(.secondary)
+                    .font(FlatFont.body(13))
+                    .foregroundStyle(FlatColors.textSecondary)
             }
         }
-        .foregroundStyle(meal.scanSource.color)
+        .foregroundStyle(meal.scanSource.flatColor)
         .padding(.horizontal, 14)
         .padding(.vertical, 8)
-        .background(meal.scanSource.color.opacity(0.1))
-        .clipShape(Capsule())
+        .background(meal.scanSource.flatColor.opacity(0.1))
+        .clipShape(RoundedRectangle(cornerRadius: 8))
     }
 
     // MARK: - Receipt Items
@@ -151,58 +139,53 @@ struct MealDetailView: View {
     private var receiptItemsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Image(systemName: "list.bullet.rectangle")
-                    .font(.system(size: 14))
-                    .foregroundStyle(.blue)
+                FlatIconCircle(icon: "list.bullet.rectangle", color: FlatColors.ocean, size: 28)
                 Text("Items from Receipt")
-                    .font(.system(size: 17, weight: .semibold, design: .rounded))
+                    .font(FlatFont.heading(17))
+                    .foregroundStyle(FlatColors.textPrimary)
                 Spacer()
                 Text("\(meal.receiptItems.count) items")
-                    .font(.system(size: 13, weight: .medium, design: .rounded))
-                    .foregroundStyle(.secondary)
+                    .font(FlatFont.label(13))
+                    .foregroundStyle(FlatColors.textSecondary)
             }
 
             ForEach(Array(meal.receiptItems.enumerated()), id: \.offset) { index, item in
                 HStack(spacing: 10) {
                     Text("\(index + 1)")
-                        .font(.system(size: 12, weight: .bold, design: .rounded))
+                        .font(FlatFont.caption(12))
+                        .fontWeight(.bold)
                         .foregroundStyle(.white)
                         .frame(width: 24, height: 24)
-                        .background(Color.blue.opacity(0.7))
-                        .clipShape(Circle())
+                        .background(FlatColors.ocean)
+                        .clipShape(RoundedRectangle(cornerRadius: 6))
 
                     Text(item)
-                        .font(.system(size: 15, weight: .medium, design: .rounded))
+                        .font(FlatFont.body(15))
+                        .foregroundStyle(FlatColors.textPrimary)
 
                     Spacer()
                 }
                 if index < meal.receiptItems.count - 1 {
-                    Divider()
+                    FlatDivider()
                 }
             }
         }
-        .padding(20)
-        .background(Color(.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 22))
-        .shadow(color: .black.opacity(0.05), radius: 12, x: 0, y: 4)
+        .flatCard(cornerRadius: 14, padding: 20)
         .opacity(appeared ? 1 : 0)
-        .animation(.spring(response: 0.5).delay(0.25), value: appeared)
+        .animation(.easeOut(duration: 0.4).delay(0.25), value: appeared)
     }
 
     // MARK: - Macro Rings
 
     private var macroRingsSection: some View {
         HStack(spacing: 16) {
-            macroRing(label: "Protein", value: meal.protein, color: .blue)
-            macroRing(label: "Carbs", value: meal.carbs, color: .orange)
-            macroRing(label: "Fat", value: meal.fat, color: .pink)
+            macroRing(label: "Protein", value: meal.protein, color: FlatColors.ocean)
+            macroRing(label: "Carbs", value: meal.carbs, color: FlatColors.tangerine)
+            macroRing(label: "Fat", value: meal.fat, color: FlatColors.rose)
         }
-        .padding(20)
-        .background(Color(.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 22))
-        .shadow(color: .black.opacity(0.05), radius: 12, x: 0, y: 4)
+        .flatCard(cornerRadius: 14, padding: 20)
         .opacity(appeared ? 1 : 0)
-        .animation(.spring(response: 0.5).delay(0.3), value: appeared)
+        .animation(.easeOut(duration: 0.4).delay(0.3), value: appeared)
     }
 
     private func macroRing(label: String, value: Double, color: Color) -> some View {
@@ -214,20 +197,19 @@ struct MealDetailView: View {
 
                 Circle()
                     .trim(from: 0, to: appeared ? min(value / 100, 1.0) : 0)
-                    .stroke(color.gradient, style: StrokeStyle(lineWidth: 10, lineCap: .round))
+                    .stroke(color, style: StrokeStyle(lineWidth: 10, lineCap: .round))
                     .frame(width: 76, height: 76)
                     .rotationEffect(.degrees(-90))
-                    .animation(.spring(response: 0.8, dampingFraction: 0.7).delay(0.4), value: appeared)
-                    .shadow(color: color.opacity(0.2), radius: 4, x: 0, y: 2)
+                    .animation(.easeOut(duration: 0.6).delay(0.4), value: appeared)
 
                 Text("\(Int(value))g")
-                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .font(FlatFont.heading(15))
                     .foregroundStyle(color)
             }
 
             Text(label)
-                .font(.system(size: 12, weight: .medium, design: .rounded))
-                .foregroundStyle(.secondary)
+                .font(FlatFont.caption(12))
+                .foregroundStyle(FlatColors.textSecondary)
         }
         .frame(maxWidth: .infinity)
     }
@@ -237,78 +219,72 @@ struct MealDetailView: View {
     private var nutrientListSection: some View {
         VStack(alignment: .leading, spacing: 0) {
             Text("Detailed Nutrients")
-                .font(.system(size: 17, weight: .semibold, design: .rounded))
+                .font(FlatFont.heading(17))
+                .foregroundStyle(FlatColors.textPrimary)
                 .padding(.bottom, 14)
 
-            nutrientRow(name: "Protein", value: "\(Int(meal.protein))g", icon: "circle.hexagongrid.fill", color: .blue)
-            Divider().padding(.vertical, 10)
-            nutrientRow(name: "Carbohydrates", value: "\(Int(meal.carbs))g", icon: "bolt.fill", color: .orange)
-            Divider().padding(.vertical, 10)
-            nutrientRow(name: "Total Fat", value: "\(Int(meal.fat))g", icon: "drop.triangle.fill", color: .pink)
-            Divider().padding(.vertical, 10)
-            nutrientRow(name: "Fiber", value: "\(Int(meal.fiber))g", icon: "leaf.fill", color: .green)
-            Divider().padding(.vertical, 10)
-            nutrientRow(name: "Sugar", value: "\(Int(meal.sugar))g", icon: "cube.fill", color: .purple)
-            Divider().padding(.vertical, 10)
-            nutrientRow(name: "Sodium", value: "\(Int(meal.sodium))mg", icon: "drop.fill", color: .cyan)
+            nutrientRow(name: "Protein", value: "\(Int(meal.protein))g", icon: "circle.hexagongrid.fill", color: FlatColors.ocean)
+            FlatDivider().padding(.vertical, 10)
+            nutrientRow(name: "Carbohydrates", value: "\(Int(meal.carbs))g", icon: "bolt.fill", color: FlatColors.tangerine)
+            FlatDivider().padding(.vertical, 10)
+            nutrientRow(name: "Total Fat", value: "\(Int(meal.fat))g", icon: "drop.triangle.fill", color: FlatColors.rose)
+            FlatDivider().padding(.vertical, 10)
+            nutrientRow(name: "Fiber", value: "\(Int(meal.fiber))g", icon: "leaf.fill", color: FlatColors.primary)
+            FlatDivider().padding(.vertical, 10)
+            nutrientRow(name: "Sugar", value: "\(Int(meal.sugar))g", icon: "cube.fill", color: FlatColors.amethyst)
+            FlatDivider().padding(.vertical, 10)
+            nutrientRow(name: "Sodium", value: "\(Int(meal.sodium))mg", icon: "drop.fill", color: FlatColors.sky)
 
-            // Vitamins
             Text("Vitamins")
-                .font(.system(size: 15, weight: .semibold, design: .rounded))
+                .font(FlatFont.heading(15))
+                .foregroundStyle(FlatColors.textPrimary)
                 .padding(.top, 16)
                 .padding(.bottom, 6)
 
-            nutrientRow(name: "Vitamin A", value: "\(Int(meal.vitaminA)) mcg", icon: "eye.fill", color: .orange)
-            Divider().padding(.vertical, 10)
-            nutrientRow(name: "Vitamin C", value: "\(Int(meal.vitaminC)) mg", icon: "pills.fill", color: .yellow)
-            Divider().padding(.vertical, 10)
-            nutrientRow(name: "Vitamin D", value: String(format: "%.1f mcg", meal.vitaminD), icon: "sun.max.fill", color: .orange)
-            Divider().padding(.vertical, 10)
-            nutrientRow(name: "Vitamin B6", value: String(format: "%.1f mg", meal.vitaminB6), icon: "bolt.heart.fill", color: .teal)
-            Divider().padding(.vertical, 10)
-            nutrientRow(name: "Vitamin B12", value: String(format: "%.1f mcg", meal.vitaminB12), icon: "heart.fill", color: .red)
+            nutrientRow(name: "Vitamin A", value: "\(Int(meal.vitaminA)) mcg", icon: "eye.fill", color: FlatColors.tangerine)
+            FlatDivider().padding(.vertical, 10)
+            nutrientRow(name: "Vitamin C", value: "\(Int(meal.vitaminC)) mg", icon: "pills.fill", color: FlatColors.sunflower)
+            FlatDivider().padding(.vertical, 10)
+            nutrientRow(name: "Vitamin D", value: String(format: "%.1f mcg", meal.vitaminD), icon: "sun.max.fill", color: FlatColors.tangerine)
+            FlatDivider().padding(.vertical, 10)
+            nutrientRow(name: "Vitamin B6", value: String(format: "%.1f mg", meal.vitaminB6), icon: "bolt.heart.fill", color: FlatColors.sky)
+            FlatDivider().padding(.vertical, 10)
+            nutrientRow(name: "Vitamin B12", value: String(format: "%.1f mcg", meal.vitaminB12), icon: "heart.fill", color: FlatColors.coral)
 
-            // Minerals
             Text("Minerals")
-                .font(.system(size: 15, weight: .semibold, design: .rounded))
+                .font(FlatFont.heading(15))
+                .foregroundStyle(FlatColors.textPrimary)
                 .padding(.top, 16)
                 .padding(.bottom, 6)
 
-            nutrientRow(name: "Potassium", value: "\(Int(meal.potassium)) mg", icon: "battery.75percent", color: .brown)
-            Divider().padding(.vertical, 10)
-            nutrientRow(name: "Iron", value: String(format: "%.1f mg", meal.iron), icon: "cross.vial.fill", color: .red)
-            Divider().padding(.vertical, 10)
-            nutrientRow(name: "Calcium", value: "\(Int(meal.calcium)) mg", icon: "bone.fill", color: .gray)
-            Divider().padding(.vertical, 10)
-            nutrientRow(name: "Magnesium", value: "\(Int(meal.magnesium)) mg", icon: "sparkles", color: .indigo)
-            Divider().padding(.vertical, 10)
-            nutrientRow(name: "Zinc", value: String(format: "%.1f mg", meal.zinc), icon: "shield.fill", color: .mint)
+            nutrientRow(name: "Potassium", value: "\(Int(meal.potassium)) mg", icon: "battery.75percent", color: FlatColors.tangerine)
+            FlatDivider().padding(.vertical, 10)
+            nutrientRow(name: "Iron", value: String(format: "%.1f mg", meal.iron), icon: "cross.vial.fill", color: FlatColors.coral)
+            FlatDivider().padding(.vertical, 10)
+            nutrientRow(name: "Calcium", value: "\(Int(meal.calcium)) mg", icon: "bone.fill", color: FlatColors.textSecondary)
+            FlatDivider().padding(.vertical, 10)
+            nutrientRow(name: "Magnesium", value: "\(Int(meal.magnesium)) mg", icon: "sparkles", color: FlatColors.amethyst)
+            FlatDivider().padding(.vertical, 10)
+            nutrientRow(name: "Zinc", value: String(format: "%.1f mg", meal.zinc), icon: "shield.fill", color: FlatColors.mint)
         }
-        .padding(20)
-        .background(Color(.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 22))
-        .shadow(color: .black.opacity(0.05), radius: 12, x: 0, y: 4)
+        .flatCard(cornerRadius: 14, padding: 20)
         .opacity(appeared ? 1 : 0)
-        .animation(.spring(response: 0.5).delay(0.4), value: appeared)
+        .animation(.easeOut(duration: 0.4).delay(0.4), value: appeared)
     }
 
     private func nutrientRow(name: String, value: String, icon: String, color: Color) -> some View {
         HStack {
-            Image(systemName: icon)
-                .font(.system(size: 14))
-                .foregroundStyle(color)
-                .frame(width: 30, height: 30)
-                .background(color.opacity(0.1))
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+            FlatIconCircle(icon: icon, color: color, size: 30)
 
             Text(name)
-                .font(.system(size: 15, weight: .medium, design: .rounded))
+                .font(FlatFont.body(15))
+                .foregroundStyle(FlatColors.textPrimary)
 
             Spacer()
 
             Text(value)
-                .font(.system(size: 15, weight: .bold, design: .rounded))
-                .foregroundStyle(.secondary)
+                .font(FlatFont.heading(15))
+                .foregroundStyle(FlatColors.textSecondary)
         }
     }
 
@@ -323,24 +299,17 @@ struct MealDetailView: View {
                 Image(systemName: "checkmark.circle.fill")
                     .font(.system(size: 18))
                 Text("Save Meal")
-                    .font(.system(size: 17, weight: .semibold, design: .rounded))
+                    .font(FlatFont.heading(17))
             }
             .foregroundStyle(.white)
             .frame(maxWidth: .infinity)
             .frame(height: 56)
-            .background(
-                LinearGradient(
-                    colors: [Color(red: 0.2, green: 0.8, blue: 0.4), Color(red: 0.1, green: 0.65, blue: 0.35)],
-                    startPoint: .leading,
-                    endPoint: .trailing
-                )
-            )
-            .clipShape(RoundedRectangle(cornerRadius: 16))
-            .shadow(color: .green.opacity(0.35), radius: 12, x: 0, y: 6)
+            .background(FlatColors.primary)
+            .clipShape(RoundedRectangle(cornerRadius: 14))
         }
-        .buttonStyle(ScaleButtonStyle())
+        .buttonStyle(FlatScaleButtonStyle())
         .opacity(appeared ? 1 : 0)
-        .animation(.spring(response: 0.5).delay(0.5), value: appeared)
+        .animation(.easeOut(duration: 0.4).delay(0.5), value: appeared)
     }
 }
 

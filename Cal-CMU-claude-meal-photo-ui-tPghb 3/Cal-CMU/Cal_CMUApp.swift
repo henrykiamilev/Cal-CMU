@@ -9,17 +9,26 @@ struct Cal_CMUApp: App {
         WindowGroup {
             Group {
                 if authManager.isLoading {
-                    // Splash / loading state
                     ZStack {
-                        Color(.systemGroupedBackground).ignoresSafeArea()
+                        FlatColors.background.ignoresSafeArea()
                         ProgressView()
                             .scaleEffect(1.2)
                     }
                 } else if authManager.isAuthenticated {
-                    MainTabView()
+                    if mealStore.hasCompletedOnboarding {
+                        MainTabView()
+                            .environment(mealStore)
+                            .environment(authManager)
+                            .preferredColorScheme(mealStore.useDarkMode ? .dark : .light)
+                    } else {
+                        OnboardingView {
+                            withAnimation(.easeOut(duration: 0.3)) {
+                                mealStore.hasCompletedOnboarding = true
+                            }
+                        }
                         .environment(mealStore)
                         .environment(authManager)
-                        .preferredColorScheme(mealStore.useDarkMode ? .dark : .light)
+                    }
                 } else {
                     LoginView()
                         .environment(authManager)
@@ -27,7 +36,6 @@ struct Cal_CMUApp: App {
             }
             .task {
                 await authManager.restoreSession()
-                // Load data if session was restored
                 if let userId = authManager.userId {
                     await mealStore.loadAllData(userId: userId)
                 }
