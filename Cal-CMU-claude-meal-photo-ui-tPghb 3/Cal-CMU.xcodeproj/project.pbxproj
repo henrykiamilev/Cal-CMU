@@ -3,60 +3,113 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AE1FAC2D2F46C6940013FA7D /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = AE1FAC2C2F46C6940013FA7D /* Auth */; };
-		AE1FAC2F2F46C6940013FA7D /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = AE1FAC2E2F46C6940013FA7D /* Functions */; };
-		AE1FAC312F46C6940013FA7D /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = AE1FAC302F46C6940013FA7D /* PostgREST */; };
-		AE1FAC332F46C6940013FA7D /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = AE1FAC322F46C6940013FA7D /* Realtime */; };
-		AE1FAC352F46C6940013FA7D /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = AE1FAC342F46C6940013FA7D /* Storage */; };
-		AE1FAC372F46C6940013FA7D /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = AE1FAC362F46C6940013FA7D /* Supabase */; };
+		A1B2C3D4E5F6000200000001 /* Cal_CMUApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000001 /* Cal_CMUApp.swift */; };
+		A1B2C3D4E5F6000200000002 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000002 /* HomeView.swift */; };
+		A1B2C3D4E5F6000200000003 /* CalorieRingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000003 /* CalorieRingView.swift */; };
+		A1B2C3D4E5F6000200000004 /* MacroBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000004 /* MacroBarView.swift */; };
+		A1B2C3D4E5F6000200000005 /* MealCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000005 /* MealCardView.swift */; };
+		A1B2C3D4E5F6000200000006 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000006 /* CameraView.swift */; };
+		A1B2C3D4E5F6000200000007 /* MealDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000007 /* MealDetailView.swift */; };
+		A1B2C3D4E5F6000200000008 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000008 /* ImagePicker.swift */; };
+		A1B2C3D4E5F6000200000009 /* Meal.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000009 /* Meal.swift */; };
+		A1B2C3D4E5F600020000000A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F600010000000A /* Assets.xcassets */; };
+		A1B2C3D4E5F600020000000B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F600010000000B /* Preview Assets.xcassets */; };
+		A1B2C3D4E5F600020000000C /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F600010000000D /* MainTabView.swift */; };
+		A1B2C3D4E5F600020000000D /* WaterTrackerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F600010000000E /* WaterTrackerView.swift */; };
+		A1B2C3D4E5F600020000000E /* StreakBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F600010000000F /* StreakBadgeView.swift */; };
+		A1B2C3D4E5F600020000000F /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000010 /* LogView.swift */; };
+		A1B2C3D4E5F6000200000010 /* InsightsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000011 /* InsightsView.swift */; };
+		A1B2C3D4E5F6000200000011 /* WeeklyChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000012 /* WeeklyChartView.swift */; };
+		A1B2C3D4E5F6000200000012 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000013 /* ProfileView.swift */; };
+		A1B2C3D4E5F6000200000013 /* GoalSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000014 /* GoalSettingView.swift */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		AE1FACEE2F47B3EA0013FA7D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = AE1FACE92F47B3EA0013FA7D /* Cal-CMU.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A1B2C3D4E5F600010000000C;
-			remoteInfo = "Cal-CMU";
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
+		A1B2C3D4E5F6000100000001 /* Cal_CMUApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cal_CMUApp.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6000100000002 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6000100000003 /* CalorieRingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalorieRingView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6000100000004 /* MacroBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacroBarView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6000100000005 /* MealCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealCardView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6000100000006 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6000100000007 /* MealDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealDetailView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6000100000008 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6000100000009 /* Meal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Meal.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F600010000000A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A1B2C3D4E5F600010000000B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		A1B2C3D4E5F600010000000C /* Cal-CMU.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cal-CMU.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		AE1FACE92F47B3EA0013FA7D /* Cal-CMU.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "Cal-CMU.xcodeproj"; sourceTree = "<group>"; };
+		A1B2C3D4E5F600010000000D /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F600010000000E /* WaterTrackerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterTrackerView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F600010000000F /* StreakBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakBadgeView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6000100000010 /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6000100000011 /* InsightsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6000100000012 /* WeeklyChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyChartView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6000100000013 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6000100000014 /* GoalSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalSettingView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		AE1FACEA2F47B3EA0013FA7D /* Cal-CMU-claude-meal-photo-ui-tPghb 3 */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "Cal-CMU-claude-meal-photo-ui-tPghb 3"; sourceTree = "<group>"; };
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		A1B2C3D4E5F6000400000002 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AE1FAC312F46C6940013FA7D /* PostgREST in Frameworks */,
-				AE1FAC2F2F46C6940013FA7D /* Functions in Frameworks */,
-				AE1FAC372F46C6940013FA7D /* Supabase in Frameworks */,
-				AE1FAC2D2F46C6940013FA7D /* Auth in Frameworks */,
-				AE1FAC352F46C6940013FA7D /* Storage in Frameworks */,
-				AE1FAC332F46C6940013FA7D /* Realtime in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		A1B2C3D4E5F6000300000001 = {
+		A1B2C3D4E5F6000300000001 /* Cal-CMU */ = {
 			isa = PBXGroup;
 			children = (
+				A1B2C3D4E5F6000300000002 /* Cal-CMU */,
 				A1B2C3D4E5F6000300000005 /* Products */,
-				AE1FACEA2F47B3EA0013FA7D /* Cal-CMU-claude-meal-photo-ui-tPghb 3 */,
 			);
+			sourceTree = "<group>";
+		};
+		A1B2C3D4E5F6000300000002 /* Cal-CMU */ = {
+			isa = PBXGroup;
+			children = (
+				A1B2C3D4E5F6000100000001 /* Cal_CMUApp.swift */,
+				A1B2C3D4E5F6000300000003 /* Views */,
+				A1B2C3D4E5F6000300000004 /* Models */,
+				A1B2C3D4E5F600010000000A /* Assets.xcassets */,
+				A1B2C3D4E5F6000300000006 /* Preview Content */,
+			);
+			path = "Cal-CMU";
+			sourceTree = "<group>";
+		};
+		A1B2C3D4E5F6000300000003 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A1B2C3D4E5F600010000000D /* MainTabView.swift */,
+				A1B2C3D4E5F6000100000002 /* HomeView.swift */,
+				A1B2C3D4E5F6000100000003 /* CalorieRingView.swift */,
+				A1B2C3D4E5F6000100000004 /* MacroBarView.swift */,
+				A1B2C3D4E5F600010000000E /* WaterTrackerView.swift */,
+				A1B2C3D4E5F600010000000F /* StreakBadgeView.swift */,
+				A1B2C3D4E5F6000100000005 /* MealCardView.swift */,
+				A1B2C3D4E5F6000100000010 /* LogView.swift */,
+				A1B2C3D4E5F6000100000006 /* CameraView.swift */,
+				A1B2C3D4E5F6000100000007 /* MealDetailView.swift */,
+				A1B2C3D4E5F6000100000008 /* ImagePicker.swift */,
+				A1B2C3D4E5F6000100000011 /* InsightsView.swift */,
+				A1B2C3D4E5F6000100000012 /* WeeklyChartView.swift */,
+				A1B2C3D4E5F6000100000013 /* ProfileView.swift */,
+				A1B2C3D4E5F6000100000014 /* GoalSettingView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		A1B2C3D4E5F6000300000004 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A1B2C3D4E5F6000100000009 /* Meal.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		A1B2C3D4E5F6000300000005 /* Products */ = {
@@ -67,12 +120,12 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		AE1FACEB2F47B3EA0013FA7D /* Products */ = {
+		A1B2C3D4E5F6000300000006 /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
-				AE1FACEF2F47B3EA0013FA7D /* Cal-CMU.app */,
+				A1B2C3D4E5F600010000000B /* Preview Assets.xcassets */,
 			);
-			name = Products;
+			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -91,7 +144,7 @@
 			dependencies = (
 			);
 			name = "Cal-CMU";
-			productName = "Cal-CMU";
+				productName = "Cal-CMU";
 			productReference = A1B2C3D4E5F600010000000C /* Cal-CMU.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -103,7 +156,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1540;
-				LastUpgradeCheck = 2620;
+				LastUpgradeCheck = 1540;
 				TargetAttributes = {
 					A1B2C3D4E5F6000500000001 = {
 						CreatedOnToolsVersion = 15.4;
@@ -118,18 +171,9 @@
 				en,
 				Base,
 			);
-			mainGroup = A1B2C3D4E5F6000300000001;
-			packageReferences = (
-				AE1FAC2B2F46C6940013FA7D /* XCRemoteSwiftPackageReference "supabase-swift" */,
-			);
+			mainGroup = A1B2C3D4E5F6000300000001 /* Cal-CMU */;
 			productRefGroup = A1B2C3D4E5F6000300000005 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = AE1FACEB2F47B3EA0013FA7D /* Products */;
-					ProjectRef = AE1FACE92F47B3EA0013FA7D /* Cal-CMU.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				A1B2C3D4E5F6000500000001 /* Cal-CMU */,
@@ -137,21 +181,13 @@
 		};
 /* End PBXProject section */
 
-/* Begin PBXReferenceProxy section */
-		AE1FACEF2F47B3EA0013FA7D /* Cal-CMU.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = "Cal-CMU.app";
-			remoteRef = AE1FACEE2F47B3EA0013FA7D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
-
 /* Begin PBXResourcesBuildPhase section */
 		A1B2C3D4E5F6000400000003 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A1B2C3D4E5F600020000000B /* Preview Assets.xcassets in Resources */,
+				A1B2C3D4E5F600020000000A /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -162,6 +198,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A1B2C3D4E5F6000200000001 /* Cal_CMUApp.swift in Sources */,
+				A1B2C3D4E5F600020000000C /* MainTabView.swift in Sources */,
+				A1B2C3D4E5F6000200000002 /* HomeView.swift in Sources */,
+				A1B2C3D4E5F6000200000003 /* CalorieRingView.swift in Sources */,
+				A1B2C3D4E5F6000200000004 /* MacroBarView.swift in Sources */,
+				A1B2C3D4E5F600020000000D /* WaterTrackerView.swift in Sources */,
+				A1B2C3D4E5F600020000000E /* StreakBadgeView.swift in Sources */,
+				A1B2C3D4E5F6000200000005 /* MealCardView.swift in Sources */,
+				A1B2C3D4E5F600020000000F /* LogView.swift in Sources */,
+				A1B2C3D4E5F6000200000006 /* CameraView.swift in Sources */,
+				A1B2C3D4E5F6000200000007 /* MealDetailView.swift in Sources */,
+				A1B2C3D4E5F6000200000008 /* ImagePicker.swift in Sources */,
+				A1B2C3D4E5F6000200000010 /* InsightsView.swift in Sources */,
+				A1B2C3D4E5F6000200000011 /* WeeklyChartView.swift in Sources */,
+				A1B2C3D4E5F6000200000012 /* ProfileView.swift in Sources */,
+				A1B2C3D4E5F6000200000013 /* GoalSettingView.swift in Sources */,
+				A1B2C3D4E5F6000200000009 /* Meal.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -226,7 +279,6 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -283,7 +335,6 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -374,49 +425,6 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		AE1FAC2B2F46C6940013FA7D /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/supabase/supabase-swift.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.5.1;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		AE1FAC2C2F46C6940013FA7D /* Auth */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = AE1FAC2B2F46C6940013FA7D /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = Auth;
-		};
-		AE1FAC2E2F46C6940013FA7D /* Functions */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = AE1FAC2B2F46C6940013FA7D /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = Functions;
-		};
-		AE1FAC302F46C6940013FA7D /* PostgREST */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = AE1FAC2B2F46C6940013FA7D /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = PostgREST;
-		};
-		AE1FAC322F46C6940013FA7D /* Realtime */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = AE1FAC2B2F46C6940013FA7D /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = Realtime;
-		};
-		AE1FAC342F46C6940013FA7D /* Storage */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = AE1FAC2B2F46C6940013FA7D /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = Storage;
-		};
-		AE1FAC362F46C6940013FA7D /* Supabase */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = AE1FAC2B2F46C6940013FA7D /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = Supabase;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A1B2C3D4E5F6000600000001 /* Project object */;
 }

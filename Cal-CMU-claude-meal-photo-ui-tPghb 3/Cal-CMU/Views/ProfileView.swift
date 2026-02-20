@@ -277,6 +277,7 @@ struct ProfileView: View {
         }
         .buttonStyle(ScaleButtonStyle())
     }
+
 }
 
 #Preview {
